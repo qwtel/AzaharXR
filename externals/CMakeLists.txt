@@ -11,6 +11,10 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/CMakeModules)
 include(DownloadExternals)
 include(ExternalProject)
 
+# Keep bundled third-party projects from pulling in their own test dependencies
+# when the top-level project has enabled testing for Citra's targets.
+set(BUILD_TESTING OFF)
+
 # Boost
 if (NOT USE_SYSTEM_BOOST)
     message(STATUS "Including vendored Boost library")
@@ -433,4 +437,3 @@ endif()
 if (ANDROID)
     add_subdirectory(openxr-sdk-src)
 endif()
-

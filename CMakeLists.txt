@@ -52,8 +52,9 @@ else()
     set(IS_RELEASE_BUILD ON)
 endif()
 
-# LTO takes too much memory and time using MSVC.
-if (NOT MSVC AND IS_RELEASE_BUILD)
+# LTO takes too much memory and time using MSVC, and CMake's IPO probe for
+# Android NDK toolchains can still try deprecated linkers such as gold.
+if (NOT MSVC AND IS_RELEASE_BUILD AND NOT ANDROID)
     set(DEFAULT_ENABLE_LTO ON)
 else()
     set(DEFAULT_ENABLE_LTO OFF)
@@ -68,7 +69,7 @@ option(ENABLE_QT "Enable the Qt frontend" ON)
 option(ENABLE_QT_TRANSLATION "Enable translations for the Qt frontend" OFF)
 CMAKE_DEPENDENT_OPTION(ENABLE_QT_UPDATER "Enable built-in updater for the Qt frontend" ON "NOT IOS" OFF)
 
-CMAKE_DEPENDENT_OPTION(ENABLE_TESTS "Enable generating tests executable" ON "NOT IOS" OFF)
+CMAKE_DEPENDENT_OPTION(ENABLE_TESTS "Enable generating tests executable" ON "NOT IOS AND NOT ANDROID" OFF)
 CMAKE_DEPENDENT_OPTION(ENABLE_DEDICATED_ROOM "Enable generating dedicated room executable" ON "NOT ANDROID AND NOT IOS" OFF)
 
 option(ENABLE_WEB_SERVICE "Enable web services (telemetry, etc.)" ON)
