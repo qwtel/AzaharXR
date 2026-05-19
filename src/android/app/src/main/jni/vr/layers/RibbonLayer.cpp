@@ -69,7 +69,7 @@ void RibbonLayer::SetPanelFromController(const XrVector3f& controllerPosition) {
     constexpr float pitchAdjustmentFactor = 0.5f;
 
     // Calculate sphere radius based on panel position to viewer
-    const float sphereRadius = XrMath::Vector3f::Length(mPanelFromWorld.position - viewerPosition);
+    const float sphereRadius = XrMath::Vector3f::Length(mWorldFromPanel.position - viewerPosition);
 
     // Calculate new window position based on controller and sphere radius
     const XrVector3f windowPosition =
@@ -96,7 +96,7 @@ void RibbonLayer::SetPanelFromController(const XrVector3f& controllerPosition) {
         XrMath::Quatf::FromAxisAngle({1.0f, 0.0f, 0.0f}, newPitchRadians + gPitchAdjustInRadians);
 
     // Combine the base rotation with the pitch adjustment
-    mPanelFromWorld = {baseRotation * pitchAdjustmentQuat, windowPosition};
+    mWorldFromPanel = {baseRotation * pitchAdjustmentQuat, windowPosition};
 }
 // Use thumbstick to tilt the pitch of the panel
 void RibbonLayer::SetPanelFromThumbstick(const float thumbstickY) {
@@ -104,13 +104,13 @@ void RibbonLayer::SetPanelFromThumbstick(const float thumbstickY) {
     const float previousPitchAdjustInRadians = gPitchAdjustInRadians;
     gPitchAdjustInRadians = std::clamp(gPitchAdjustInRadians + pitchAdjustInRadians,
                                        -MATH_FLOAT_PI / 3.0f, MATH_FLOAT_PI / 8.0f);
-    mPanelFromWorld.orientation =
-        mPanelFromWorld.orientation *
+    mWorldFromPanel.orientation =
+        mWorldFromPanel.orientation *
         XrMath::Quatf::FromAxisAngle({1.0f, 0.0f, 0.0f},
                                      (gPitchAdjustInRadians - previousPitchAdjustInRadians));
 }
 
 void RibbonLayer::SetPanelWithPose(const XrPosef& pose) {
-    mPanelFromWorld       = pose;
+    mWorldFromPanel       = pose;
     gPitchAdjustInRadians = XrMath::Quatf::GetPitchInRadians(pose.orientation);
 }

@@ -75,7 +75,7 @@ public:
     Panel(const XrPosef& pose, const float width, const float height, const float scaleFactor,
           const XrVector2f& clickMin, const XrVector2f& clickMax)
         : mClickBounds{clickMin, clickMax}
-        , mPanelFromWorld(pose)
+        , mWorldFromPanel(pose)
         , mWidth(width)
         , mHeight(height)
         , mScaleFactor(scaleFactor)
@@ -90,7 +90,7 @@ public:
         XrVector2f mMin;
         XrVector2f mMax;
     } mClickBounds;
-    XrPosef       mPanelFromWorld;
+    XrPosef       mWorldFromPanel;
     const float   mWidth;
     const float   mHeight;
     const float   mScaleFactor;
@@ -188,7 +188,7 @@ public:
     void           SetTopPanelFromThumbstick(const float thumbstickY);
     XrPosef        GetTopPanelFromHeadPose(uint32_t eye, const XrPosef& headPose);
     void           ResetPanelPositions();
-    const XrPosef& GetLowerPanelPose() const { return mLowerPanel.mPanelFromWorld; }
+    const XrPosef& GetLowerPanelPose() const { return mLowerPanel.mWorldFromPanel; }
     void           SetLowerPanelWithPose(const XrPosef& pose);
 
 private:

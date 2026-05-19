@@ -135,7 +135,7 @@ Panel CreateLowerPanelFromTopPanel(const Panel& topPanel, const float resolution
     // Pitch the lower panel away from the viewer 45 degrees
     const float cropHoriz = 90.0f * resolutionFactor;
 
-    XrPosef lowerPanelFromWorld = topPanel.mPanelFromWorld;
+    XrPosef lowerPanelFromWorld = topPanel.mWorldFromPanel;
     lowerPanelFromWorld.orientation =
         XrMath::Quatf::FromEuler(kInitialLowerPanelPitchInRadians, 0, 0);
     lowerPanelFromWorld.position.y += isImmersiveModeEnabled ? kImmersiveLowerPanelYOffsetInMeters
@@ -181,10 +181,11 @@ bool GetRayIntersectionWithPanel(const Panel& panel, const XrVector2f& scaleFact
                                  const float resolutionFactor)
 
 {
-    const XrPosef    worldFromPanel = XrMath::Posef::Inverted(panel.mPanelFromWorld);
-    const XrVector3f localStart     = XrMath::Posef::Transform(worldFromPanel, start);
-    const XrVector3f localEnd       = XrMath::Posef::Transform(worldFromPanel, end);
-    // Note: assumes layer lies in the XZ plane
+    const XrPosef    panelFromWorld = XrMath::Posef::Inverted(panel.mWorldFromPanel);
+    const XrVector3f localStart     = XrMath::Posef::Transform(panelFromWorld, start);
+    const XrVector3f localEnd       = XrMath::Posef::Transform(panelFromWorld, end);
+    // Note: intersection is solved in panel-local space, where the panel plane is z = 0.
+    // Panel translation/rotation are already accounted for by transforming the ray with panelFromWorld.
     const float tan = localStart.z / (localStart.z - localEnd.z);
 
     // Check for backwards controller
@@ -193,7 +194,7 @@ bool GetRayIntersectionWithPanel(const Panel& panel, const XrVector2f& scaleFact
         return false;
     }
     result3d.position    = start + (end - start) * tan;
-    result3d.orientation = panel.mPanelFromWorld.orientation;
+    result3d.orientation = panel.mWorldFromPanel.orientation;
 
     const XrVector2f result2dNDC = {
         (localStart.x + (localEnd.x - localStart.x) * tan) / (scaleFactor.x),
@@ -287,7 +288,7 @@ void GameSurfaceLayer::FrameTopPanel(const XrSpace& space, std::vector<XrComposi
     if (useCylinder) {
         // Create the Top Display Panel (Curved display)
         for (uint32_t eye = 0; eye < NUM_EYES; eye++) {
-            XrPosef topPanelFromWorld = mTopPanel.mPanelFromWorld;
+            XrPosef topPanelFromWorld = mTopPanel.mWorldFromPanel;
             if (mImmersiveMode > 1 && isImmersiveModeEnabled) {
                 topPanelFromWorld = GetTopPanelFromHeadPose(eye, headPose);
             }
@@ -351,7 +352,7 @@ void GameSurfaceLayer::FrameTopPanel(const XrSpace& space, std::vector<XrComposi
             layer.subImage.imageRect.extent.width  = mTopPanel.mWidth - cropHoriz;
             layer.subImage.imageRect.extent.height = mTopPanel.mHeight - verticalBorderTex;
             layer.subImage.imageArrayIndex         = 0;
-            layer.pose                             = mTopPanel.mPanelFromWorld;
+            layer.pose                             = mTopPanel.mWorldFromPanel;
             // Scale to get the desired density within the visible area (if we
             // want).
             const auto scale  = GetDensityScaleForSize(mTopPanel.mWidth - cropHoriz,
@@ -399,7 +400,7 @@ void GameSurfaceLayer::FrameLowerPanel(const XrSpace&                   space,
     layer.subImage.imageRect.extent.width  = (mLowerPanel.mWidth - cropHoriz) / immersiveModeFactor;
     layer.subImage.imageRect.extent.height = mLowerPanel.mHeight / immersiveModeFactor;
     layer.subImage.imageArrayIndex         = 0;
-    layer.pose                             = mLowerPanel.mPanelFromWorld;
+    layer.pose                             = mLowerPanel.mWorldFromPanel;
     const auto scale  = GetDensityScaleForSize(mLowerPanel.mWidth - cropHoriz, -mLowerPanel.mHeight,
                                                mLowerPanel.mScaleFactor, mResolutionFactor);
     layer.size.width  = scale.x;
@@ -436,11 +437,11 @@ void GameSurfaceLayer::SetTopPanelFromController(const XrVector3f& controllerPos
 
     // Set the initial distance of the window from the viewer.
     const float sphereRadius =
-        XrMath::Vector3f::Length(mTopPanel.mPanelFromWorld.position - viewerPosition);
+        XrMath::Vector3f::Length(mTopPanel.mWorldFromPanel.position - viewerPosition);
     const XrVector3f windowPosition =
         CalculatePanelPosition(viewerPosition, controllerPosition, sphereRadius);
     if (windowPosition.z >= -0.5f) { return; }
-    if (XrMath::Vector3f::LengthSq(windowPosition - mLowerPanel.mPanelFromWorld.position) <
+    if (XrMath::Vector3f::LengthSq(windowPosition - mLowerPanel.mWorldFromPanel.position) <
         XrMath::Vector3f::LengthSq(mTopPanel.mInitialPose.position -
                                    mLowerPanel.mInitialPose.position)) {
         return;
@@ -448,18 +449,18 @@ void GameSurfaceLayer::SetTopPanelFromController(const XrVector3f& controllerPos
 
     const XrQuaternionf windowRotation =
         CalculatePanelRotation(windowPosition, viewerPosition, windowUpDirection);
-    mTopPanel.mPanelFromWorld = XrPosef{windowRotation, windowPosition};
+    mTopPanel.mWorldFromPanel = XrPosef{windowRotation, windowPosition};
 }
 
 void GameSurfaceLayer::SetTopPanelFromThumbstick(const float thumbstickY) {
     static constexpr float kThumbstickSpeed = 0.05f;
     static constexpr float kMaxDepth        = -10.0f;
 
-    mTopPanel.mPanelFromWorld.position.z -= (thumbstickY * kThumbstickSpeed);
-    mTopPanel.mPanelFromWorld.position.z =
-        std::min(mTopPanel.mPanelFromWorld.position.z, mLowerPanel.mPanelFromWorld.position.z);
-    mTopPanel.mPanelFromWorld.position.z =
-        std::max(mTopPanel.mPanelFromWorld.position.z, kMaxDepth);
+    mTopPanel.mWorldFromPanel.position.z -= (thumbstickY * kThumbstickSpeed);
+    mTopPanel.mWorldFromPanel.position.z =
+        std::min(mTopPanel.mWorldFromPanel.position.z, mLowerPanel.mWorldFromPanel.position.z);
+    mTopPanel.mWorldFromPanel.position.z =
+        std::max(mTopPanel.mWorldFromPanel.position.z, kMaxDepth);
 }
 
 XrPosef GameSurfaceLayer::GetTopPanelFromHeadPose(uint32_t eye, const XrPosef& headPose) {
@@ -487,8 +488,8 @@ XrPosef GameSurfaceLayer::GetTopPanelFromHeadPose(uint32_t eye, const XrPosef& h
 
 void GameSurfaceLayer::ResetPanelPositions() {
 
-    mTopPanel.mPanelFromWorld   = mTopPanel.mInitialPose;
-    mLowerPanel.mPanelFromWorld = mLowerPanel.mInitialPose;
+    mTopPanel.mWorldFromPanel   = mTopPanel.mInitialPose;
+    mLowerPanel.mWorldFromPanel = mLowerPanel.mInitialPose;
 }
 
 // based on thumbstick, modify the depth of the top panel
@@ -552,5 +553,5 @@ void GameSurfaceLayer::CreateSwapchain() {
 }
 
 void GameSurfaceLayer::SetLowerPanelWithPose(const XrPosef& pose) {
-    mLowerPanel.mPanelFromWorld = pose;
+    mLowerPanel.mWorldFromPanel = pose;
 }

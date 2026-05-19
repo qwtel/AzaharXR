@@ -11,7 +11,7 @@ public:
     void SetPanelFromThumbstick(const float thumbstickY);
     void SetPanelWithPose(const XrPosef& pose);
 
-    const XrPosef& GetPose() const { return mPanelFromWorld; }
+    const XrPosef& GetPose() const { return mWorldFromPanel; }
 
 private:
     const XrPosef mInitialPose;

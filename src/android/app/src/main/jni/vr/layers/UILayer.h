@@ -129,7 +129,7 @@ protected:
     jobject GetVrUILayerObject() const { return mVrUILayerObject; }
     jclass  GetVrUILayerClass() const { return mVrUILayerClass; }
     JNIEnv* GetEnv() const { return mEnv; }
-    XrPosef mPanelFromWorld;
+    XrPosef mWorldFromPanel;
 
 private:
     int  Init(const jclass classObject, const jobject activityObject, const XrVector3f& position,

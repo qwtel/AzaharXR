@@ -115,16 +115,17 @@ float GetDensitySysprop() {
 //-----------------------------------------------------------------------------
 // Panel math
 
-bool GetRayIntersectionWithPanel(const XrPosef& panelFromWorld, const uint32_t panelWidth,
+bool GetRayIntersectionWithPanel(const XrPosef& worldFromPanel, const uint32_t panelWidth,
                                  const uint32_t panelHeight, const XrVector2f& scaleFactor,
                                  const XrVector3f& start, const XrVector3f& end,
                                  XrVector2f& result2d, XrPosef& result3d)
 
 {
-    const XrPosef    worldFromPanel = XrMath::Posef::Inverted(panelFromWorld);
-    const XrVector3f localStart     = XrMath::Posef::Transform(worldFromPanel, start);
-    const XrVector3f localEnd       = XrMath::Posef::Transform(worldFromPanel, end);
-    // Note: assumes layer lies in the XZ plane
+    const XrPosef    panelFromWorld = XrMath::Posef::Inverted(worldFromPanel);
+    const XrVector3f localStart     = XrMath::Posef::Transform(panelFromWorld, start);
+    const XrVector3f localEnd       = XrMath::Posef::Transform(panelFromWorld, end);
+    // Note: intersection is solved in panel-local space, where the panel plane is z = 0.
+    // Panel translation/rotation are already accounted for by transforming the ray with panelFromWorld.
     const float tan = localStart.z / (localStart.z - localEnd.z);
 
     // Check for backwards controller
@@ -133,7 +134,7 @@ bool GetRayIntersectionWithPanel(const XrPosef& panelFromWorld, const uint32_t p
         return false;
     }
     result3d.position    = start + (end - start) * tan;
-    result3d.orientation = panelFromWorld.orientation;
+    result3d.orientation = worldFromPanel.orientation;
 
     const XrVector2f result2dNDC = {
         (localStart.x + (localEnd.x - localStart.x) * tan) / (scaleFactor.x),
@@ -162,7 +163,7 @@ XrVector2f GetDensityScaleForSize(const int32_t texWidth, const int32_t texHeigh
 UILayer::UILayer(const jclass classObject, const XrVector3f&& position,
                  const XrQuaternionf&& orientation, JNIEnv* env, jobject activityObject,
                  const XrSession& session)
-    : mPanelFromWorld(XrPosef{orientation, position})
+    : mWorldFromPanel(XrPosef{orientation, position})
     , mSession(session)
     , mEnv(env) {
     const int32_t initializationStatus = Init(classObject, activityObject, position, session);
@@ -197,7 +198,7 @@ void UILayer::Frame(const XrSpace&                   space,
     layer.subImage.imageRect.extent.width  = mSwapchain.mWidth;
     layer.subImage.imageRect.extent.height = mSwapchain.mHeight;
     layer.subImage.imageArrayIndex         = 0;
-    layer.pose                             = mPanelFromWorld;
+    layer.pose                             = mWorldFromPanel;
     const auto scale  = GetDensityScaleForSize(mSwapchain.mWidth, -mSwapchain.mHeight, 1.0f);
     layer.size.width  = scale.x;
     layer.size.height = scale.y;
@@ -209,7 +210,7 @@ bool UILayer::GetRayIntersectionWithPanel(const XrVector3f& start,
                                           XrVector2f&       result2d,
                                           XrPosef&          result3d) const {
     const XrVector2f scale = GetDensityScaleForSize(mSwapchain.mWidth, mSwapchain.mHeight, 1.0f);
-    return ::GetRayIntersectionWithPanel(mPanelFromWorld, mSwapchain.mWidth, mSwapchain.mHeight,
+    return ::GetRayIntersectionWithPanel(mWorldFromPanel, mSwapchain.mWidth, mSwapchain.mHeight,
                                          scale, start, end, result2d, result3d);
 }
 
