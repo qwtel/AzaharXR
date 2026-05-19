@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_disclaimer">このソフトではニンテンドー3DS用ゲームをプレイできますが、ゲーム自体は含まれていません。\n\n実行前に、3DSゲームファイルを端末のストレージに保存しておいてください。</string>
     <string name="app_notification_channel_description">CitraVR 3DS 通知</string>
     <string name="app_notification_running">CitraVRを実行中</string>
-
-    <!-- Input related strings -->
     <string name="controller_circlepad">スライドパッド</string>
     <string name="controller_c">Cスティック</string>
     <string name="controller_triggers">トリガー</string>
@@ -18,23 +15,15 @@
     <string name="input_binding_description_horizontal_axis">スティックを左か右に入力してください</string>
     <string name="input_message_analog_only">このコントロールはゲームパッドのスティック入力が必要です！</string>
     <string name="input_message_button_only">このコントロールはゲームパッドのボタン入力が必要です！</string>
-
-    <!-- Generic buttons (Shared with lots of stuff) -->
     <string name="generic_buttons">ボタン</string>
-
-    <!-- Core settings strings -->
     <string name="cpu_jit">CPU JITを有効化</string>
     <string name="cpu_jit_description">CPUのエミュレーションにジャストインタイム(JIT)コンパイラを使用します。有効にすると、パフォーマンスが大幅に向上します。</string>
     <string name="init_clock">システム日時</string>
     <string name="init_clock_description">エミュレートする3DSについて、デバイスの日時を反映させるか任意の日時を指定できます。</string>
-
-    <!-- System settings strings -->
     <string name="init_time">システムクロックで開始時間を上書き</string>
     <string name="init_time_description">システム時刻を「任意の日時」に設定している場合、開始日時は固定されます。</string>
     <string name="emulated_region">地域</string>
     <string name="emulated_language">システム言語</string>
-
-    <!-- Graphics settings strings -->
     <string name="vsync">垂直同期(V-Sync)を有効化</string>
     <string name="vsync_description">ゲームのフレームレートをデバイスのリフレッシュレートに同期させます。</string>
     <string name="linear_filtering">リニアフィルタリングを有効化</string>
@@ -51,22 +40,14 @@
     <string name="internal_resolution">内部解像度</string>
     <string name="internal_resolution_description">レンダリング解像度を指定します。高い解像度は画質を大幅に向上させますが、パフォーマンスにも大きく影響し、特定のゲームで問題が発生する可能性があります。</string>
     <string name="performance_warning">この設定をオフにすると、エミュレーション性能が大幅に低下します。最高のエクスペリエンスを実現するには、この設定を有効化にすることをお勧めします。</string>
-    <!-- Audio settings strings -->
     <string name="audio_stretch">タイムストレッチを有効化</string>
     <string name="audio_stretch_description">タイムストレッチ処理を行うことで音に関する問題を軽減させます。有効にすると音声遅延が増加し、パフォーマンスがわずかに低下します。</string>
-
-    <!-- Miscellaneous -->
     <string name="clear">クリア</string>
     <string name="slider_default">デフォルト</string>
     <string name="auto">自動スケール</string>
     <string name="gameid_saved">設定を保存しました：%1$s</string>
-    <!-- Game Grid Screen-->
     <string name="grid_menu_core_settings">設定</string>
-
-    <!-- Add Directory Screen-->
     <string name="select_game_folder">ゲームフォルダを選択</string>
-
-    <!-- Preferences Screen -->
     <string name="preferences_settings">設定</string>
     <string name="preferences_general">一般</string>
     <string name="preferences_system">システム</string>
@@ -74,12 +55,8 @@
     <string name="preferences_graphics">グラフィック</string>
     <string name="preferences_audio">サウンド</string>
     <string name="preferences_debug">デバッグ</string>
-
-    <!-- ROM loading errors -->
     <string name="loader_error_encrypted">ROMが暗号化されています</string>
     <string name="loader_error_invalid_format">無効なROMフォーマットです</string>
-
-    <!-- Emulation Menu -->
     <string name="emulation_show_fps">FPSを表示する</string>
     <string name="emulation_configure_controls">コントロールの設定</string>
     <string name="emulation_edit_layout">レイアウトを編集</string>
@@ -96,20 +73,14 @@
     <string name="emulation_close_game_message">プレイ中のゲームを終了しますか?</string>
     <string name="write_permission_needed">動作させるためには外部ストレージへのアクセスを許可する必要があります。</string>
     <string name="load_settings">設定を読込中...</string>
-
     <string name="external_storage_not_mounted">CitraVRを利用するには外部ストレージが必要です。</string>
-
     <string name="select_dir">このフォルダを選択</string>
     <string name="empty_gamelist">ゲームファイルのあるフォルダが選択されていません</string>
-
-    <!-- Software Keyboard -->
     <string name="software_keyboard">ソフトウェアキーボード</string>
     <string name="fixed_length_required">テキストの長さが正しくありません (%d 文字以内にしてください)</string>
     <string name="max_length_exceeded">テキストが長すぎます (%d 文字以内にしてください)</string>
     <string name="blank_input_not_allowed">空白だけの入力はできません</string>
     <string name="empty_input_not_allowed">入力なしのまま進めることはできません</string>
-
-    <!-- VR-specific -->
     <string name="preferences_vr">VR</string>
     <string name="vr_background">VR環境</string>
     <string name="vr_error_two_instances_title">エラー：CitraVRの二重インスタンスを検出</string>

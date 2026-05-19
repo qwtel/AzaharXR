@@ -1,20 +1,24 @@
-// Copyright 2023 Citra Emulator Project
+// Copyright Citra Emulator Project / Azahar Emulator Project
 // Licensed under GPLv2 or any later version
 // Refer to the license.txt file included.
 
 #include "common/archives.h"
+#include "common/hacks/hack_manager.h"
 #include "common/microprofile.h"
 #include "core/core.h"
 #include "core/core_timing.h"
 #include "core/hle/service/gsp/gsp_gpu.h"
 #include "core/hle/service/plgldr/plgldr.h"
+#include "core/loader/loader.h"
 #include "video_core/debug_utils/debug_utils.h"
 #include "video_core/gpu.h"
 #include "video_core/gpu_debugger.h"
+#include "video_core/gpu_impl.h"
 #include "video_core/pica/pica_core.h"
 #include "video_core/pica/regs_lcd.h"
 #include "video_core/renderer_base.h"
 #include "video_core/renderer_software/sw_blitter.h"
+#include "video_core/right_eye_disabler.h"
 #include "video_core/video_core.h"
 
 namespace VideoCore {
@@ -25,32 +29,10 @@ constexpr VAddr VADDR_GPU = 0x1EF00000;
 MICROPROFILE_DEFINE(GPU_DisplayTransfer, "GPU", "DisplayTransfer", MP_RGB(100, 100, 255));
 MICROPROFILE_DEFINE(GPU_CmdlistProcessing, "GPU", "Cmdlist Processing", MP_RGB(100, 255, 100));
 
-struct GPU::Impl {
-    Core::Timing& timing;
-    Core::System& system;
-    Memory::MemorySystem& memory;
-    std::shared_ptr<Pica::DebugContext> debug_context;
-    Pica::PicaCore pica;
-    GraphicsDebugger gpu_debugger;
-    std::unique_ptr<RendererBase> renderer;
-    RasterizerInterface* rasterizer;
-    std::unique_ptr<SwRenderer::SwBlitter> sw_blitter;
-    Core::TimingEventType* vblank_event;
-    Service::GSP::InterruptHandler signal_interrupt;
-
-    explicit Impl(Core::System& system, Frontend::EmuWindow& emu_window,
-                  Frontend::EmuWindow* secondary_window)
-        : timing{system.CoreTiming()}, system{system}, memory{system.Memory()},
-          debug_context{Pica::g_debug_context}, pica{memory, debug_context},
-          renderer{VideoCore::CreateRenderer(emu_window, secondary_window, pica, system)},
-          rasterizer{renderer->Rasterizer()}, sw_blitter{std::make_unique<SwRenderer::SwBlitter>(
-                                                  memory, rasterizer)} {}
-    ~Impl() = default;
-};
-
 GPU::GPU(Core::System& system, Frontend::EmuWindow& emu_window,
          Frontend::EmuWindow* secondary_window)
-    : impl{std::make_unique<Impl>(system, emu_window, secondary_window)} {
+    : right_eye_disabler{std::make_unique<RightEyeDisabler>(*this)},
+      impl{std::make_unique<Impl>(system, emu_window, secondary_window)} {
     impl->vblank_event = impl->timing.RegisterEvent(
         "GPU::VBlankCallback",
         [this](uintptr_t user_data, s64 cycles_late) { VBlankCallback(user_data, cycles_late); });
@@ -76,11 +58,10 @@ PAddr GPU::VirtualToPhysicalAddress(VAddr addr) {
     if (addr >= Memory::NEW_LINEAR_HEAP_VADDR && addr <= Memory::NEW_LINEAR_HEAP_VADDR_END) {
         return addr - Memory::NEW_LINEAR_HEAP_VADDR + Memory::FCRAM_PADDR;
     }
-    if (addr >= Memory::PLUGIN_3GX_FB_VADDR && addr <= Memory::PLUGIN_3GX_FB_VADDR_END) {
-        auto plg_ldr = Service::PLGLDR::GetService(impl->system);
-        if (plg_ldr) {
-            return addr - Memory::PLUGIN_3GX_FB_VADDR + plg_ldr->GetPluginFBAddr();
-        }
+    PAddr plg_fb_addr;
+    if (addr >= Memory::PLUGIN_3GX_FB_VADDR && addr <= Memory::PLUGIN_3GX_FB_VADDR_END &&
+        (plg_fb_addr = impl->system.Memory().Plugin3GXFramebufferAddress())) {
+        return addr - Memory::PLUGIN_3GX_FB_VADDR + plg_fb_addr;
     }
 
     LOG_ERROR(HW_Memory, "Unknown virtual address @ 0x{:08X}", addr);
@@ -142,19 +123,21 @@ void GPU::Execute(const Service::GSP::Command& command) {
         auto& memfill = regs.memory_fill_config;
 
         // Write to the memory fill GPU registers.
+        // If both buffers are set GSP dispatches PSC0 only.
+        const bool has_both_bufs = params.start1 != 0 && params.start2 != 0;
         if (params.start1 != 0) {
             memfill[0].address_start = VirtualToPhysicalAddress(params.start1) >> 3;
             memfill[0].address_end = VirtualToPhysicalAddress(params.end1) >> 3;
             memfill[0].value_32bit = params.value1;
             memfill[0].control = params.control1;
-            MemoryFill(0);
+            MemoryFill(0, has_both_bufs ? std::numeric_limits<u32>::max() : 0);
         }
         if (params.start2 != 0) {
             memfill[1].address_start = VirtualToPhysicalAddress(params.start2) >> 3;
             memfill[1].address_end = VirtualToPhysicalAddress(params.end2) >> 3;
             memfill[1].value_32bit = params.value2;
             memfill[1].control = params.control2;
-            MemoryFill(1);
+            MemoryFill(1, has_both_bufs ? 0 : 1);
         }
         break;
     }
@@ -232,6 +215,7 @@ void GPU::SetBufferSwap(u32 screen_id, const Service::GSP::FrameBufferInfo& info
     if (screen_id == 0) {
         MicroProfileFlip();
         impl->system.perf_stats->EndGameFrame();
+        right_eye_disabler->ReportEndFrame();
     }
 }
 
@@ -284,10 +268,10 @@ void GPU::WriteReg(VAddr addr, u32 data) {
         // Handle registers that trigger GPU actions
         switch (index) {
         case GPU_REG_INDEX(memory_fill_config[0].trigger):
-            MemoryFill(0);
+            MemoryFill(0, 0);
             break;
         case GPU_REG_INDEX(memory_fill_config[1].trigger):
-            MemoryFill(1);
+            MemoryFill(1, 1);
             break;
         case GPU_REG_INDEX(display_transfer_config.trigger):
             MemoryTransfer();
@@ -306,10 +290,6 @@ void GPU::WriteReg(VAddr addr, u32 data) {
     default:
         UNREACHABLE_MSG("Write to unknown GPU address {:#08X}", addr);
     }
-}
-
-void GPU::Sync() {
-    impl->renderer->Sync();
 }
 
 VideoCore::RendererBase& GPU::Renderer() {
@@ -332,6 +312,26 @@ GraphicsDebugger& GPU::Debugger() {
     return impl->gpu_debugger;
 }
 
+void GPU::ApplyPerProgramSettings(u64 program_ID) {
+    auto hack = Common::Hacks::hack_manager.GetHack(
+        Common::Hacks::HackType::ACCURATE_MULTIPLICATION, program_ID);
+    bool use_accurate_mul = Settings::values.shaders_accurate_mul.GetValue();
+    if (hack) {
+        switch (hack->mode) {
+        case Common::Hacks::HackAllowMode::DISALLOW:
+            use_accurate_mul = false;
+            break;
+        case Common::Hacks::HackAllowMode::FORCE:
+            use_accurate_mul = true;
+            break;
+        case Common::Hacks::HackAllowMode::ALLOW:
+        default:
+            break;
+        }
+    }
+    impl->rasterizer->SetAccurateMul(use_accurate_mul);
+}
+
 void GPU::SubmitCmdList(u32 index) {
     // Check if a command list was triggered.
     auto& config = impl->pica.regs.internal.pipeline.command_buffer;
@@ -344,11 +344,12 @@ void GPU::SubmitCmdList(u32 index) {
     // Forward command list processing to the PICA core.
     const PAddr addr = config.GetPhysicalAddress(index);
     const u32 size = config.GetSize(index);
-    impl->pica.ProcessCmdList(addr, size);
+    impl->pica.ProcessCmdList(addr, size,
+                              !right_eye_disabler->ShouldAllowCmdQueueTrigger(addr, size));
     config.trigger[index] = 0;
 }
 
-void GPU::MemoryFill(u32 index) {
+void GPU::MemoryFill(u32 index, u32 intr_index) {
     // Check if a memory fill was triggered.
     auto& config = impl->pica.regs.memory_fill_config[index];
     if (!config.trigger) {
@@ -363,9 +364,9 @@ void GPU::MemoryFill(u32 index) {
     // It seems that it won't signal interrupt if "address_start" is zero.
     // TODO: hwtest this
     if (config.GetStartAddress() != 0) {
-        if (!index) {
+        if (intr_index == 0) {
             impl->signal_interrupt(Service::GSP::InterruptId::PSC0);
-        } else {
+        } else if (intr_index == 1) {
             impl->signal_interrupt(Service::GSP::InterruptId::PSC1);
         }
     }
@@ -396,8 +397,11 @@ void GPU::MemoryTransfer() {
             impl->sw_blitter->TextureCopy(config);
         }
     } else {
-        if (!impl->rasterizer->AccelerateDisplayTransfer(config)) {
-            impl->sw_blitter->DisplayTransfer(config);
+        if (right_eye_disabler->ShouldAllowDisplayTransfer(config.GetPhysicalInputAddress(),
+                                                           config.input_height)) {
+            if (!impl->rasterizer->AccelerateDisplayTransfer(config)) {
+                impl->sw_blitter->DisplayTransfer(config);
+            }
         }
     }
 
@@ -416,6 +420,53 @@ void GPU::VBlankCallback(std::uintptr_t user_data, s64 cycles_late) {
 
     // Reschedule recurrent event
     impl->timing.ScheduleEvent(FRAME_TICKS - cycles_late, impl->vblank_event);
+}
+
+void GPU::RecreateRenderer(Frontend::EmuWindow& emu_window, Frontend::EmuWindow* secondary_window) {
+    // Reset the renderer (this will destroy OpenGL resources)
+    impl->renderer.reset();
+
+    // Create a new renderer
+    impl->renderer =
+        VideoCore::CreateRenderer(emu_window, secondary_window, impl->pica, impl->system);
+    impl->rasterizer = impl->renderer->Rasterizer();
+
+    // Rebind the rasterizer to the PICA GPU
+    impl->pica.BindRasterizer(impl->rasterizer);
+
+    // Update the sw_blitter with the new rasterizer
+    impl->sw_blitter = std::make_unique<SwRenderer::SwBlitter>(impl->memory, impl->rasterizer);
+
+    // Re-apply per-game configuration and reload disk shader cache
+    u64 program_id{};
+    impl->system.GetAppLoader().ReadProgramId(program_id);
+    ApplyPerProgramSettings(program_id);
+    if (Settings::values.use_disk_shader_cache) {
+        impl->renderer->Rasterizer()->LoadDefaultDiskResources(false, nullptr);
+    }
+
+    // Mark ALL GPU registers as dirty so current state gets uploaded to new renderer
+    impl->pica.dirty_regs.SetAllDirty();
+
+    // Also mark shader setups as dirty so uniforms get re-uploaded and
+    // stale pointers to the old rasterizer's JIT cache are cleared.
+    impl->pica.vs_setup.uniforms_dirty = true;
+    impl->pica.vs_setup.cached_shader = nullptr;
+    impl->pica.gs_setup.uniforms_dirty = true;
+    impl->pica.gs_setup.cached_shader = nullptr;
+
+    // Mark all cached LUT/table state in pica as dirty
+    impl->pica.lighting.lut_dirty = impl->pica.lighting.LutAllDirty;
+    impl->pica.fog.lut_dirty = true;
+    impl->pica.proctex.table_dirty = impl->pica.proctex.TableAllDirty;
+}
+
+void GPU::ReleaseRenderer() {
+    // Just reset the renderer to release OpenGL resources
+    // Don't null out rasterizer pointer as it will become dangling
+    impl->renderer.reset();
+    impl->sw_blitter.reset();
+    LOG_INFO(HW_GPU, "Renderer released for context destroy");
 }
 
 template <class Archive>

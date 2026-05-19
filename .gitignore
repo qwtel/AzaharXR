@@ -7,18 +7,26 @@ compile_commands.json
 doc-build/
 build-*/
 
+# NSIS built executables
+src/installer/*.exe
+
 # Generated source files
 src/common/scm_rev.cpp
 .travis.descriptor.json
 
+# Docker image files
+*.dockerimage
+
 # Project/editor files
 *.swp
 *.kdev4
+.markdown-preview.html
 .idea/
 .vs/
 .vscode/
 .cache/
 .kdev4/
+.kotlin/
 cmake-build-debug/
 cmake-build-release/
 CMakeLists.txt.user*
@@ -52,3 +60,7 @@ repo/
 .ccache/
 node_modules/
 VULKAN_SDK/
+
+# Version info files
+GIT-COMMIT
+GIT-TAG

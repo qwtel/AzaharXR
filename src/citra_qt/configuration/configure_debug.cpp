@@ -1,4 +1,4 @@
-// Copyright 2016 Citra Emulator Project
+// Copyright Citra Emulator Project / Azahar Emulator Project
 // Licensed under GPLv2 or any later version
 // Refer to the license.txt file included.
 
@@ -73,6 +73,8 @@ ConfigureDebug::ConfigureDebug(bool is_powered_on_, QWidget* parent)
     ui->toggle_cpu_jit->setEnabled(!is_powered_on);
     ui->toggle_renderer_debug->setEnabled(!is_powered_on);
     ui->toggle_dump_command_buffers->setEnabled(!is_powered_on);
+    ui->enable_rpc_server->setEnabled(!is_powered_on);
+    ui->toggle_unique_data_console_type->setEnabled(!is_powered_on);
 
     // Set a minimum width for the label to prevent the slider from changing size.
     // This scales across DPIs. (This value should be enough for "xxx%")
@@ -97,9 +99,20 @@ void ConfigureDebug::SetConfiguration() {
     ui->toggle_console->setEnabled(!is_powered_on);
     ui->toggle_console->setChecked(UISettings::values.show_console.GetValue());
     ui->log_filter_edit->setText(QString::fromStdString(Settings::values.log_filter.GetValue()));
+    ui->log_regex_filter_edit->setText(
+        QString::fromStdString(Settings::values.log_regex_filter.GetValue()));
     ui->toggle_cpu_jit->setChecked(Settings::values.use_cpu_jit.GetValue());
     ui->delay_start_for_lle_modules->setChecked(
         Settings::values.delay_start_for_lle_modules.GetValue());
+    ui->deterministic_async_operations->setChecked(
+        Settings::values.deterministic_async_operations.GetValue());
+    ui->enable_rpc_server->setChecked(Settings::values.enable_rpc_server.GetValue());
+#ifndef ENABLE_SCRIPTING
+    ui->enable_rpc_server->setVisible(false);
+#endif // !ENABLE_SCRIPTING
+    ui->toggle_unique_data_console_type->setChecked(
+        Settings::values.toggle_unique_data_console_type.GetValue());
+
     ui->toggle_renderer_debug->setChecked(Settings::values.renderer_debug.GetValue());
     ui->toggle_dump_command_buffers->setChecked(Settings::values.dump_command_buffers.GetValue());
 
@@ -119,21 +132,30 @@ void ConfigureDebug::SetConfiguration() {
         SettingsToSlider(Settings::values.cpu_clock_percentage.GetValue()));
     ui->clock_display_label->setText(
         QStringLiteral("%1%").arg(Settings::values.cpu_clock_percentage.GetValue()));
+    ui->instant_debug_log->setChecked(Settings::values.instant_debug_log.GetValue());
 }
 
 void ConfigureDebug::ApplyConfiguration() {
     Settings::values.use_gdbstub = ui->toggle_gdbstub->isChecked();
-    Settings::values.gdbstub_port = ui->gdbport_spinbox->value();
+    Settings::values.gdbstub_port = static_cast<u16>(ui->gdbport_spinbox->value());
     UISettings::values.show_console = ui->toggle_console->isChecked();
     Settings::values.log_filter = ui->log_filter_edit->text().toStdString();
+    Settings::values.log_regex_filter = ui->log_regex_filter_edit->text().toStdString();
     Debugger::ToggleConsole();
     Common::Log::Filter filter;
     filter.ParseFilterString(Settings::values.log_filter.GetValue());
     Common::Log::SetGlobalFilter(filter);
+    Common::Log::SetRegexFilter(Settings::values.log_regex_filter.GetValue());
     Settings::values.use_cpu_jit = ui->toggle_cpu_jit->isChecked();
     Settings::values.delay_start_for_lle_modules = ui->delay_start_for_lle_modules->isChecked();
+    Settings::values.deterministic_async_operations =
+        ui->deterministic_async_operations->isChecked();
+    Settings::values.enable_rpc_server = ui->enable_rpc_server->isChecked();
+    Settings::values.toggle_unique_data_console_type =
+        ui->toggle_unique_data_console_type->isChecked();
     Settings::values.renderer_debug = ui->toggle_renderer_debug->isChecked();
     Settings::values.dump_command_buffers = ui->toggle_dump_command_buffers->isChecked();
+    Settings::values.instant_debug_log = ui->instant_debug_log->isChecked();
 
     ConfigurationShared::ApplyPerGameSetting(
         &Settings::values.cpu_clock_percentage, ui->clock_speed_combo,
@@ -154,6 +176,8 @@ void ConfigureDebug::SetupPerGameUI() {
 
     ui->groupBox->setVisible(false);
     ui->groupBox_2->setVisible(false);
+    ui->enable_rpc_server->setVisible(false);
+    ui->toggle_unique_data_console_type->setVisible(false);
     ui->toggle_cpu_jit->setVisible(false);
 }
 

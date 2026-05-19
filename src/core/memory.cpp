@@ -1,4 +1,4 @@
-// Copyright 2015 Citra Emulator Project
+// Copyright Citra Emulator Project / Azahar Emulator Project
 // Licensed under GPLv2 or any later version
 // Refer to the license.txt file included.
 
@@ -77,10 +77,10 @@ private:
     friend class boost::serialization::access;
     template <typename Archive>
     void serialize(Archive& ar, const unsigned int file_version) {
-        ar& vram;
-        ar& linear_heap;
-        ar& new_linear_heap;
-        ar& plugin_fb;
+        ar & vram;
+        ar & linear_heap;
+        ar & new_linear_heap;
+        ar & plugin_fb;
     }
 };
 
@@ -91,18 +91,19 @@ public:
     std::unique_ptr<u8[]> fcram = std::make_unique<u8[]>(Memory::FCRAM_N3DS_SIZE);
     std::unique_ptr<u8[]> vram = std::make_unique<u8[]>(Memory::VRAM_SIZE);
     std::unique_ptr<u8[]> n3ds_extra_ram = std::make_unique<u8[]>(Memory::N3DS_EXTRA_RAM_SIZE);
+    std::unique_ptr<u8[]> dsp_ram = std::make_unique<u8[]>(Memory::DSP_RAM_SIZE);
 
     Core::System& system;
     std::shared_ptr<PageTable> current_page_table = nullptr;
     RasterizerCacheMarker cache_marker;
     std::vector<std::shared_ptr<PageTable>> page_table_list;
 
-    AudioCore::DspInterface* dsp = nullptr;
-
     std::shared_ptr<BackingMem> fcram_mem;
     std::shared_ptr<BackingMem> vram_mem;
     std::shared_ptr<BackingMem> n3ds_extra_ram_mem;
     std::shared_ptr<BackingMem> dsp_mem;
+
+    PAddr plugin_fb_address{};
 
     Impl(Core::System& system_);
 
@@ -111,7 +112,7 @@ public:
         case Region::VRAM:
             return vram.get();
         case Region::DSP:
-            return dsp->GetDspMemory().data();
+            return dsp_ram.get();
         case Region::FCRAM:
             return fcram.get();
         case Region::N3DS:
@@ -126,7 +127,7 @@ public:
         case Region::VRAM:
             return vram.get();
         case Region::DSP:
-            return dsp->GetDspMemory().data();
+            return dsp_ram.get();
         case Region::FCRAM:
             return fcram.get();
         case Region::N3DS:
@@ -263,12 +264,8 @@ public:
         if (addr >= VRAM_VADDR && addr < VRAM_VADDR_END) {
             return {vram_mem, addr - VRAM_VADDR};
         }
-        if (addr >= PLUGIN_3GX_FB_VADDR && addr < PLUGIN_3GX_FB_VADDR_END) {
-            auto plg_ldr = Service::PLGLDR::GetService(system);
-            if (plg_ldr) {
-                return {fcram_mem,
-                        addr - PLUGIN_3GX_FB_VADDR + plg_ldr->GetPluginFBAddr() - FCRAM_PADDR};
-            }
+        if (addr >= PLUGIN_3GX_FB_VADDR && addr < PLUGIN_3GX_FB_VADDR_END && plugin_fb_address) {
+            return {fcram_mem, addr - PLUGIN_3GX_FB_VADDR + plugin_fb_address - FCRAM_PADDR};
         }
 
         UNREACHABLE();
@@ -307,9 +304,8 @@ public:
         CheckRegion(LINEAR_HEAP_VADDR, LINEAR_HEAP_VADDR_END, FCRAM_PADDR);
         CheckRegion(NEW_LINEAR_HEAP_VADDR, NEW_LINEAR_HEAP_VADDR_END, FCRAM_PADDR);
         CheckRegion(VRAM_VADDR, VRAM_VADDR_END, VRAM_PADDR);
-        auto plg_ldr = Service::PLGLDR::GetService(system);
-        if (plg_ldr && plg_ldr->GetPluginFBAddr()) {
-            CheckRegion(PLUGIN_3GX_FB_VADDR, PLUGIN_3GX_FB_VADDR_END, plg_ldr->GetPluginFBAddr());
+        if (plugin_fb_address) {
+            CheckRegion(PLUGIN_3GX_FB_VADDR, PLUGIN_3GX_FB_VADDR_END, plugin_fb_address);
         }
     }
 
@@ -318,20 +314,22 @@ private:
     template <class Archive>
     void serialize(Archive& ar, const unsigned int file_version) {
         bool save_n3ds_ram = Settings::values.is_new_3ds.GetValue();
-        ar& save_n3ds_ram;
+        ar & save_n3ds_ram;
         ar& boost::serialization::make_binary_object(vram.get(), Memory::VRAM_SIZE);
         ar& boost::serialization::make_binary_object(
             fcram.get(), save_n3ds_ram ? Memory::FCRAM_N3DS_SIZE : Memory::FCRAM_SIZE);
         ar& boost::serialization::make_binary_object(
             n3ds_extra_ram.get(), save_n3ds_ram ? Memory::N3DS_EXTRA_RAM_SIZE : 0);
-        ar& cache_marker;
-        ar& page_table_list;
+        ar& boost::serialization::make_binary_object(dsp_ram.get(), Memory::DSP_RAM_SIZE);
+        ar & cache_marker;
+        ar & page_table_list;
         // dsp is set from Core::System at startup
-        ar& current_page_table;
-        ar& fcram_mem;
-        ar& vram_mem;
-        ar& n3ds_extra_ram_mem;
-        ar& dsp_mem;
+        ar & current_page_table;
+        ar & fcram_mem;
+        ar & vram_mem;
+        ar & n3ds_extra_ram_mem;
+        ar & dsp_mem;
+        ar & plugin_fb_address;
     }
 };
 
@@ -388,6 +386,10 @@ std::shared_ptr<PageTable> MemorySystem::GetCurrentPageTable() const {
 
 void MemorySystem::RasterizerFlushVirtualRegion(VAddr start, u32 size, FlushMode mode) {
     impl->RasterizerFlushVirtualRegion(start, size, mode);
+}
+
+PAddr& Memory::MemorySystem::Plugin3GXFramebufferAddress() {
+    return impl->plugin_fb_address;
 }
 
 void MemorySystem::MapPages(PageTable& page_table, u32 base, u32 size, MemoryRef memory,
@@ -448,8 +450,8 @@ void MemorySystem::UnregisterPageTable(std::shared_ptr<PageTable> page_table) {
 }
 
 template <typename T>
-T MemorySystem::Read(const VAddr vaddr) {
-    const u8* page_pointer = impl->current_page_table->pointers[vaddr >> CITRA_PAGE_BITS];
+T MemorySystem::Read(const std::shared_ptr<PageTable>& page_table, const VAddr vaddr) {
+    const u8* page_pointer = page_table->pointers[vaddr >> CITRA_PAGE_BITS];
     if (page_pointer) {
         // NOTE: Avoid adding any extra logic to this fast-path block
         T value;
@@ -472,7 +474,7 @@ T MemorySystem::Read(const VAddr vaddr) {
         }
     }
 
-    PageType type = impl->current_page_table->attributes[vaddr >> CITRA_PAGE_BITS];
+    PageType type = page_table->attributes[vaddr >> CITRA_PAGE_BITS];
     switch (type) {
     case PageType::Unmapped:
         LOG_ERROR(HW_Memory, "unmapped Read{} @ 0x{:08X} at PC 0x{:08X}", sizeof(T) * 8, vaddr,
@@ -496,8 +498,9 @@ T MemorySystem::Read(const VAddr vaddr) {
 }
 
 template <typename T>
-void MemorySystem::Write(const VAddr vaddr, const T data) {
-    u8* page_pointer = impl->current_page_table->pointers[vaddr >> CITRA_PAGE_BITS];
+void MemorySystem::Write(const std::shared_ptr<PageTable>& page_table, const VAddr vaddr,
+                         const T data) {
+    u8* page_pointer = page_table->pointers[vaddr >> CITRA_PAGE_BITS];
     if (page_pointer) {
         // NOTE: Avoid adding any extra logic to this fast-path block
         std::memcpy(&page_pointer[vaddr & CITRA_PAGE_MASK], &data, sizeof(T));
@@ -521,7 +524,7 @@ void MemorySystem::Write(const VAddr vaddr, const T data) {
         }
     }
 
-    PageType type = impl->current_page_table->attributes[vaddr >> CITRA_PAGE_BITS];
+    PageType type = page_table->attributes[vaddr >> CITRA_PAGE_BITS];
     switch (type) {
     case PageType::Unmapped:
         LOG_ERROR(HW_Memory, "unmapped Write{} 0x{:08X} @ 0x{:08X} at PC 0x{:08X}",
@@ -586,7 +589,7 @@ bool MemorySystem::IsValidVirtualAddress(const Kernel::Process& process, const V
     return false;
 }
 
-bool MemorySystem::IsValidPhysicalAddress(const PAddr paddr) const {
+bool MemorySystem::IsValidPhysicalAddress(const PAddr paddr) {
     return GetPhysicalRef(paddr);
 }
 
@@ -637,11 +640,12 @@ std::string MemorySystem::ReadCString(VAddr vaddr, std::size_t max_length) {
     return string;
 }
 
-u8* MemorySystem::GetPhysicalPointer(PAddr address) const {
-    return GetPhysicalRef(address);
-}
+MemorySystem::PhysMemRegionInfo MemorySystem::GetPhysMemRegionInfo(PAddr address) {
+    if (address >= phys_mem_region_info_cache.region_start &&
+        address < phys_mem_region_info_cache.region_end) {
+        return phys_mem_region_info_cache;
+    }
 
-MemoryRef MemorySystem::GetPhysicalRef(PAddr address) const {
     constexpr std::array memory_areas = {
         std::make_pair(VRAM_PADDR, VRAM_SIZE),
         std::make_pair(DSP_RAM_PADDR, DSP_RAM_SIZE),
@@ -655,36 +659,53 @@ MemoryRef MemorySystem::GetPhysicalRef(PAddr address) const {
         return address >= area.first && address <= area.first + area.second;
     });
 
-    if (area == memory_areas.end()) {
-        LOG_ERROR(HW_Memory, "Unknown GetPhysicalPointer @ {:#08X} at PC {:#08X}", address,
+    if (area == memory_areas.end()) [[unlikely]] {
+        LOG_ERROR(HW_Memory, "Unknown GetPhysMemRegionInfo @ {:#08X} at PC {:#08X}", address,
                   impl->GetPC());
-        return nullptr;
+        phys_mem_region_info_cache = PhysMemRegionInfo();
+        return phys_mem_region_info_cache;
     }
 
-    u32 offset_into_region = address - area->first;
-
-    std::shared_ptr<BackingMem> target_mem = nullptr;
     switch (area->first) {
     case VRAM_PADDR:
-        target_mem = impl->vram_mem;
+        phys_mem_region_info_cache = {&impl->vram_mem, area->first, area->second};
         break;
     case DSP_RAM_PADDR:
-        target_mem = impl->dsp_mem;
+        phys_mem_region_info_cache = {&impl->dsp_mem, area->first, area->second};
         break;
     case FCRAM_PADDR:
-        target_mem = impl->fcram_mem;
+        phys_mem_region_info_cache = {&impl->fcram_mem, area->first, area->second};
         break;
     case N3DS_EXTRA_RAM_PADDR:
-        target_mem = impl->n3ds_extra_ram_mem;
+        phys_mem_region_info_cache = {&impl->n3ds_extra_ram_mem, area->first, area->second};
         break;
     default:
         UNREACHABLE();
     }
-    if (offset_into_region > target_mem->GetSize()) {
+
+    return phys_mem_region_info_cache;
+}
+
+u8* MemorySystem::GetPhysicalPointer(PAddr address) {
+    auto target_mem = GetPhysMemRegionInfo(address);
+
+    if (!target_mem.valid()) [[unlikely]] {
         return {nullptr};
     }
 
-    return {target_mem, offset_into_region};
+    u32 offset_into_region = address - target_mem.region_start;
+    return target_mem.backing_mem->get()->GetPtr() + offset_into_region;
+}
+
+MemoryRef MemorySystem::GetPhysicalRef(PAddr address) {
+    const auto& target_mem = GetPhysMemRegionInfo(address);
+
+    if (!target_mem.valid()) [[unlikely]] {
+        return {nullptr};
+    }
+
+    u32 offset_into_region = address - target_mem.region_start;
+    return {*target_mem.backing_mem, offset_into_region};
 }
 
 std::vector<VAddr> MemorySystem::PhysicalToVirtualAddressForRasterizer(PAddr addr) {
@@ -692,12 +713,9 @@ std::vector<VAddr> MemorySystem::PhysicalToVirtualAddressForRasterizer(PAddr add
         return {addr - VRAM_PADDR + VRAM_VADDR};
     }
     // NOTE: Order matters here.
-    auto plg_ldr = Service::PLGLDR::GetService(impl->system);
-    if (plg_ldr) {
-        auto fb_addr = plg_ldr->GetPluginFBAddr();
-        if (addr >= fb_addr && addr < fb_addr + PLUGIN_3GX_FB_SIZE) {
-            return {addr - fb_addr + PLUGIN_3GX_FB_VADDR};
-        }
+    PAddr plg_fb_addr = Plugin3GXFramebufferAddress();
+    if (plg_fb_addr && addr >= plg_fb_addr && addr < plg_fb_addr + PLUGIN_3GX_FB_SIZE) {
+        return {addr - plg_fb_addr + PLUGIN_3GX_FB_VADDR};
     }
     if (addr >= FCRAM_PADDR && addr < FCRAM_PADDR_END) {
         return {addr - FCRAM_PADDR + LINEAR_HEAP_VADDR, addr - FCRAM_PADDR + NEW_LINEAR_HEAP_VADDR};
@@ -766,19 +784,35 @@ void MemorySystem::RasterizerMarkRegionCached(PAddr start, u32 size, bool cached
 }
 
 u8 MemorySystem::Read8(const VAddr addr) {
-    return Read<u8>(addr);
+    return Read<u8>(impl->current_page_table, addr);
+}
+
+u8 MemorySystem::Read8(const Kernel::Process& process, VAddr addr) {
+    return Read<u8>(process.vm_manager.page_table, addr);
 }
 
 u16 MemorySystem::Read16(const VAddr addr) {
-    return Read<u16_le>(addr);
+    return Read<u16_le>(impl->current_page_table, addr);
+}
+
+u16 MemorySystem::Read16(const Kernel::Process& process, VAddr addr) {
+    return Read<u16_le>(process.vm_manager.page_table, addr);
 }
 
 u32 MemorySystem::Read32(const VAddr addr) {
-    return Read<u32_le>(addr);
+    return Read<u32_le>(impl->current_page_table, addr);
+}
+
+u32 MemorySystem::Read32(const Kernel::Process& process, VAddr addr) {
+    return Read<u32_le>(process.vm_manager.page_table, addr);
 }
 
 u64 MemorySystem::Read64(const VAddr addr) {
-    return Read<u64_le>(addr);
+    return Read<u64_le>(impl->current_page_table, addr);
+}
+
+u64 MemorySystem::Read64(const Kernel::Process& process, VAddr addr) {
+    return Read<u64_le>(process.vm_manager.page_table, addr);
 }
 
 void MemorySystem::ReadBlock(const Kernel::Process& process, const VAddr src_addr,
@@ -792,19 +826,35 @@ void MemorySystem::ReadBlock(VAddr src_addr, void* dest_buffer, std::size_t size
 }
 
 void MemorySystem::Write8(const VAddr addr, const u8 data) {
-    Write<u8>(addr, data);
+    Write<u8>(impl->current_page_table, addr, data);
+}
+
+void MemorySystem::Write8(const Kernel::Process& process, const VAddr addr, const u8 data) {
+    Write<u8>(process.vm_manager.page_table, addr, data);
 }
 
 void MemorySystem::Write16(const VAddr addr, const u16 data) {
-    Write<u16_le>(addr, data);
+    Write<u16_le>(impl->current_page_table, addr, data);
+}
+
+void MemorySystem::Write16(const Kernel::Process& process, const VAddr addr, const u16 data) {
+    Write<u16_le>(process.vm_manager.page_table, addr, data);
 }
 
 void MemorySystem::Write32(const VAddr addr, const u32 data) {
-    Write<u32_le>(addr, data);
+    Write<u32_le>(impl->current_page_table, addr, data);
+}
+
+void MemorySystem::Write32(const Kernel::Process& process, const VAddr addr, const u32 data) {
+    Write<u32_le>(process.vm_manager.page_table, addr, data);
 }
 
 void MemorySystem::Write64(const VAddr addr, const u64 data) {
-    Write<u64_le>(addr, data);
+    Write<u64_le>(impl->current_page_table, addr, data);
+}
+
+void MemorySystem::Write64(const Kernel::Process& process, const VAddr addr, const u64 data) {
+    Write<u64_le>(process.vm_manager.page_table, addr, data);
 }
 
 bool MemorySystem::WriteExclusive8(const VAddr addr, const u8 data, const u8 expected) {
@@ -949,8 +999,9 @@ MemoryRef MemorySystem::GetFCRAMRef(std::size_t offset) const {
     return MemoryRef(impl->fcram_mem, offset);
 }
 
-void MemorySystem::SetDSP(AudioCore::DspInterface& dsp) {
-    impl->dsp = &dsp;
+u8* MemorySystem::GetDspMemory(std::size_t offset) const {
+    ASSERT(offset <= Memory::DSP_RAM_SIZE);
+    return impl->dsp_ram.get() + offset;
 }
 
 } // namespace Memory

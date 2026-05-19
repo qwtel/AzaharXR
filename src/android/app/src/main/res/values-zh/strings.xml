@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string name="app_disclaimer">此软件可以运行任天堂 3DS 掌机游戏。本软件不包含任何游戏。\n\n在开始前，请选择一个文件夹来存储 CitraVR 用户数据。\n\n了解更多：\n<a href='https://github.com/citra-emu/citra/wiki/CitraVR-Android-user-data-and-storage'>WiKi - Android 版 CitraVR 的用户数据及存储</a></string>
+    <string name="app_disclaimer">此软件可以运行任天堂 3DS 掌机游戏。本软件不包含任何游戏。\n\n在开始前，请选择一个文件夹来存储 CitraVR 用户数据。\n\n了解更多：\n<a href="https://github.com/citra-emu/citra/wiki/CitraVR-Android-user-data-and-storage">WiKi - Android 版 CitraVR 的用户数据及存储</a>
+    </string>
     <string name="app_notification_channel_description">CitraVR 3DS 模拟器</string>
     <string name="app_notification_running">CitraVR 正在运行</string>
     <string name="app_game_install_description">接下来，您需要选择一个游戏目录。CitraVR 将显示所选目录中的所有 3DS ROM。\n\nCIA 格式的 ROM、游戏更新和 DLC 需要分别进行安装，具体为点击文件夹图标并选择“安装 CIA”。</string>
-
-    <!-- Home Strings -->
     <string name="grid_menu_core_settings">设置</string>
     <string name="home_options">选项</string>
     <string name="home_search">搜索</string>
@@ -32,8 +30,6 @@
     <string name="select_citra_user_folder_home_description">更改 CitraVR 用于加载游戏的相关文件</string>
     <string name="theme_and_color_description">更改应用程序的外观</string>
     <string name="install_cia_title">安装 CIA</string>
-
-    <!-- GPU driver installation -->
     <string name="select_gpu_driver">选择 GPU 驱动</string>
     <string name="select_gpu_driver_title">您要替换当前的 GPU 驱动吗？</string>
     <string name="select_gpu_driver_install">安装</string>
@@ -43,8 +39,6 @@
     <string name="select_gpu_driver_error">您选择了无效的驱动，仅使用系统默认驱动。</string>
     <string name="system_gpu_driver">系统 GPU 驱动</string>
     <string name="installing_driver">正在安装驱动...</string>
-
-    <!-- About screen strings -->
     <string name="copied_to_clipboard">已复制到剪贴板</string>
     <string name="contributors">贡献者</string>
     <string name="contributors_description">CitraVR 团队的用 \u2764 打造</string>
@@ -55,14 +49,12 @@
     <string name="support_link">https://discord.gg/FAXfZV9</string>
     <string name="website_link">https://citra-emu.org/</string>
     <string name="github_link">https://github.com/citra-emu</string>
-
-    <!-- Setup strings -->
     <string name="welcome">欢迎！</string>
-    <string name="welcome_description">了解如何设置 &lt;b>CitraVR&lt;/b> 并进行模拟。</string>
+    <string name="welcome_description">了解如何设置 &lt;b&gt;CitraVR&lt;/b&gt; 并进行模拟。</string>
     <string name="get_started">开始</string>
     <string name="step_complete">完成！</string>
     <string name="games">游戏</string>
-    <string name="games_description">选择您的&lt;b>游戏&lt;/b>文件夹。</string>
+    <string name="games_description">选择您的&lt;b&gt;游戏&lt;/b&gt;文件夹。</string>
     <string name="done">完成</string>
     <string name="done_description">准备就绪。\n玩得开心！</string>
     <string name="text_continue">继续</string>
@@ -84,20 +76,16 @@
     <string name="warning_skip">跳过</string>
     <string name="warning_cancel">取消</string>
     <string name="select_citra_user_folder">选择用户文件夹</string>
-    <string name="select_citra_user_folder_description"><![CDATA[使用下方按钮选择您的<a href=\"https://github.com/citra-emu/citra/wiki/CitraVR-Android-user-data-and-storage\">用户数据</a>文件夹。]]></string>
+    <string name="select_citra_user_folder_description">使用下方按钮选择您的&lt;a href=\"https://github.com/citra-emu/citra/wiki/CitraVR-Android-user-data-and-storage\"&gt;用户数据&lt;/a&gt;文件夹。</string>
     <string name="select">选择</string>
     <string name="cannot_skip">此步骤不可跳过</string>
     <string name="cannot_skip_directory_description">运行 CitraVR 的必需步骤。请选择一个文件夹，然后才可继续。</string>
     <string name="cannot_skip_directory_help">https://github.com/citra-emu/citra/wiki/CitraVR-Android-user-data-and-storage</string>
-
-    <!-- Search Strings -->
     <string name="search_and_filter_games">搜索和游戏过滤器</string>
     <string name="home_search_games">搜索游戏</string>
     <string name="search_recently_played">最近游玩</string>
     <string name="search_recently_added">最近添加</string>
     <string name="search_installed">已安装</string>
-
-    <!-- Input related strings -->
     <string name="controller_circlepad">方向摇杆</string>
     <string name="controller_c">C 摇杆</string>
     <string name="controller_hotkeys">热键</string>
@@ -115,19 +103,13 @@
     <string name="button_home">HOME</string>
     <string name="input_message_analog_only">此操作只能绑定到游戏手柄的摇杆或十字方向键上！</string>
     <string name="input_message_button_only">此操作只能绑定到游戏手柄的按键上！</string>
-
-    <!-- Generic buttons (Shared with lots of stuff) -->
     <string name="generic_buttons">按键</string>
     <string name="button">按键</string>
-
-    <!-- Core settings strings -->
     <string name="cpu_jit">CPU JIT</string>
     <string name="cpu_jit_description">使用即时编译进行 CPU 仿真。启用后，游戏性能将显著提高。</string>
     <string name="init_clock">系统时钟类型</string>
     <string name="init_clock_description">设置为“设备时钟”将使用设备的实际时钟，而设置为“模拟时钟”将在自定义的日期和时间进行游戏。</string>
     <string name="cpu_clock_speed">CPU 时钟频率</string>
-
-    <!-- System settings strings -->
     <string name="username">用户名</string>
     <string name="new_3ds">New 3DS 模式</string>
     <string name="lle_applets">使用 LLE 小程序 (如果已安装)</string>
@@ -148,8 +130,6 @@
     <string name="plugin_loader_description">从模拟 SD 卡加载 3GX 插件。</string>
     <string name="allow_plugin_loader">允许游戏更改插件加载器状态</string>
     <string name="allow_plugin_loader_description">允许自制游戏启用插件加载器。</string>
-
-    <!-- Camera settings strings -->
     <string name="inner_camera">内置摄像头</string>
     <string name="outer_left_camera">外置左摄像头</string>
     <string name="outer_right_camera">外置右摄像头</string>
@@ -161,8 +141,6 @@
     <string name="camera_facing_back">后置摄像头</string>
     <string name="camera_facing_external">外置摄像头</string>
     <string name="image_flip">图像翻转</string>
-
-    <!-- Graphics settings strings -->
     <string name="renderer">渲染器</string>
     <string name="graphics_api">图形 API</string>
     <string name="spirv_shader_gen">启用 SPIR-V 着色器</string>
@@ -214,15 +192,11 @@
     <string name="preload_textures_description">将所有的自定义纹理加载到内存中。可能会占用大量内存。</string>
     <string name="async_custom_loading">异步加载自定义纹理</string>
     <string name="async_custom_loading_description">在后台异步加载自定义纹理，以减少卡顿。</string>
-
-    <!-- Audio settings strings -->
     <string name="audio_volume">音量</string>
     <string name="audio_stretch">音频拉伸</string>
     <string name="audio_stretch_description">拉伸音频以减少卡顿。启用后，会增加音频延迟并略微降低性能。</string>
     <string name="audio_input_type">音频输入设备</string>
     <string name="sound_output_mode">声音输出模式</string>
-
-    <!-- Miscellaneous -->
     <string name="clear">清除</string>
     <string name="slider_default">默认</string>
     <string name="ini_saved">已保存的设置</string>
@@ -234,7 +208,7 @@
     <string name="learn_more">了解更多</string>
     <string name="close">关闭</string>
     <string name="reset_to_default">恢复默认</string>
-    <string name="redump_games"><![CDATA[请按照指南重新转储您的<a href=\"https://citra-emu.org/wiki/dumping-game-cartridges/\">游戏卡带</a>或<a href=\"https://citra-emu.org/wiki/dumping-installed-titles/\">已安装的游戏</a>。]]></string>
+    <string name="redump_games">请按照指南重新转储您的&lt;a href=\"https://citra-emu.org/wiki/dumping-game-cartridges/\"&gt;游戏卡带&lt;/a&gt;或&lt;a href=\"https://citra-emu.org/wiki/dumping-installed-titles/\"&gt;已安装的游戏&lt;/a&gt;。</string>
     <string name="option_default">默认</string>
     <string name="none">无</string>
     <string name="auto">自动</string>
@@ -250,15 +224,9 @@
     <string name="setting_not_editable">您现在不能编辑此项</string>
     <string name="setting_not_editable_description">在游戏运行时此项不能更改。</string>
     <string name="auto_select">自动选择</string>
-
-    <!-- Add Directory Screen-->
     <string name="select_game_folder">选择游戏目录</string>
-
-    <!-- Game Properties -->
     <string name="properties">属性</string>
     <string name="properties_not_loaded">无法加载游戏属性。</string>
-
-    <!-- Preferences Screen -->
     <string name="preferences_settings">设置</string>
     <string name="preferences_general">通用</string>
     <string name="preferences_system">系统</string>
@@ -268,14 +236,10 @@
     <string name="preferences_audio">声音</string>
     <string name="preferences_debug">调试</string>
     <string name="preferences_theme">主题和色彩</string>
-
-    <!-- ROM loading errors -->
     <string name="loader_error_encrypted">您的 ROM 是加密的</string>
     <string name="loader_error_invalid_format">无效的 ROM 格式</string>
     <string name="loader_error_file_not_found">ROM 文件不存在</string>
     <string name="no_game_present">目前没有可启动的游戏！</string>
-
-    <!-- Emulation Menu -->
     <string name="emulation_menu_help">按返回键呼出菜单。</string>
     <string name="emulation_save_state">保存存档</string>
     <string name="emulation_load_state">读取存档</string>
@@ -315,15 +279,11 @@
     <string name="resume_emulation">继续模拟</string>
     <string name="lock_drawer">锁定侧滑菜单</string>
     <string name="unlock_drawer">解锁侧滑菜单</string>
-
     <string name="write_permission_needed">您需要允许 CitraVR 对外部存储器进行读写访问，以便模拟器正常工作。</string>
     <string name="load_settings">正在加载设置...</string>
-
     <string name="external_storage_not_mounted">需要有可用的外部存储器，CitraVR 才能正常工作。</string>
-
     <string name="select_dir">选择此目录</string>
     <string name="empty_gamelist">找不到游戏文件或尚未添加游戏目录。</string>
-
     <string name="do_not_show_this_again">不要再显示</string>
     <string name="searching_directory">正在搜索目录: %s</string>
     <string name="move_data">数据移动</string>
@@ -332,8 +292,6 @@
     <string name="copy_complete">复制完成</string>
     <string name="savestates">保存存档</string>
     <string name="savestate_warning_message">警告：即时存档不能替代游戏内存档，它并不完全可靠。\n\n您必须自行承担使用风险。</string>
-
-    <!-- Software Keyboard -->
     <string name="software_keyboard">软件键盘</string>
     <string name="i_forgot">我忘记了</string>
     <string name="fixed_length_required">文本长度不正确（应为 %d 个字符）</string>
@@ -341,21 +299,13 @@
     <string name="blank_input_not_allowed">不允许空白输入</string>
     <string name="empty_input_not_allowed">请输入字符</string>
     <string name="invalid_input">无效输入</string>
-
-    <!-- Mii Selector -->
     <string name="mii_selector">Mii 选择器</string>
     <string name="standard_mii">标准 Mii</string>
-
-    <!-- Camera -->
     <string name="camera_select_image">选择图像</string>
     <string name="camera">摄像头</string>
-    <string name="camera_permission_needed">CitraVR 需要访问您的摄像头来模拟 3DS 上的摄像头。\n\n或者，您也可以在设置—>摄像头中将“图像来源”设置为“静止图像”。</string>
-
-    <!-- Microphone -->
+    <string name="camera_permission_needed">CitraVR 需要访问您的摄像头来模拟 3DS 上的摄像头。\n\n或者，您也可以在设置—&gt;摄像头中将“图像来源”设置为“静止图像”。</string>
     <string name="microphone">麦克风</string>
     <string name="microphone_permission_needed">CitraVR 需要访问您的麦克风来模拟 3DS 实机上的麦克风。\n\n或者，您也可以在声音设置中更改“音频输入设备”。</string>
-
-    <!-- Core Errors -->
     <string name="abort_button">中止</string>
     <string name="continue_button">继续</string>
     <string name="system_archive_not_found">未找到系统档案</string>
@@ -365,12 +315,8 @@
     <string name="save_load_error">保存/读取出现错误</string>
     <string name="fatal_error">致命错误</string>
     <string name="fatal_error_message">发生致命错误。请查阅日志获取相关信息。\n继续模拟可能会导致错误和崩溃。</string>
-
-    <!-- Disk shader cache -->
     <string name="preparing_shaders">正在准备着色器</string>
     <string name="building_shaders">正在构建着色器</string>
-
-    <!-- Cheats -->
     <string name="cheats">金手指</string>
     <string name="cheats_add">添加金手指</string>
     <string name="cheats_name">名称</string>
@@ -382,8 +328,6 @@
     <string name="cheats_error_no_name">名称不能为空</string>
     <string name="cheats_error_no_code_lines">代码不能为空</string>
     <string name="cheats_error_on_line">第 %1$d 行出现错误</string>
-
-    <!-- CIA Install -->
     <plurals name="cia_install_toast">
         <item quantity="other">正在安装 %d 个文件。请查看通知了解详情。</item>
     </plurals>
@@ -397,24 +341,16 @@
     <string name="cia_install_error_invalid">“%s”不是有效的 CIA 文件</string>
     <string name="cia_install_error_encrypted">“%s”需要解密才能被 CitraVR 识别。\n解密过程需要一台实体 3DS 游戏机</string>
     <string name="cia_install_error_unknown">安装“%s”时出现未知错误。\n 有关详细信息，请参阅日志文件</string>
-
-    <!-- Theme Modes -->
     <string name="change_theme_mode">更改主题模式</string>
     <string name="theme_mode_follow_system">跟随系统</string>
     <string name="theme_mode_light">浅色</string>
     <string name="theme_mode_dark">深色</string>
     <string name="material_you">Material You</string>
     <string name="material_you_description">在应用程序中使用系统配色</string>
-
-    <!-- Black backgrounds theme -->
     <string name="use_black_backgrounds">黑色背景</string>
     <string name="use_black_backgrounds_description">使用深色主题时，套用黑色背景。</string>
-
-    <!-- Clock types -->
     <string name="device_clock">设备时钟</string>
     <string name="simulated_clock">模拟时钟</string>
-
-    <!-- Region names -->
     <string name="system_region_jpn">日本</string>
     <string name="system_region_usa">北美</string>
     <string name="system_region_eur">欧洲</string>
@@ -422,8 +358,6 @@
     <string name="system_region_chn">中国大陆</string>
     <string name="system_region_kor">韩国</string>
     <string name="system_region_twn">港澳台</string>
-
-    <!-- Language names -->
     <string name="language_japanese">日语 (日本語)</string>
     <string name="language_english">英语</string>
     <string name="language_french">法语 (Français)</string>
@@ -436,50 +370,32 @@
     <string name="language_portuguese">葡萄牙语 (Português)</string>
     <string name="language_russian">俄语 (Русский)</string>
     <string name="language_traditional_chinese">繁体中文 (正體中文)</string>
-
-    <!-- Camera image sources -->
     <string name="blank">空白</string>
     <string name="still_image">图片</string>
     <string name="device_camera">实体摄像头</string>
-
-    <!-- Camera device names -->
     <string name="any_front_camera">前置摄像头</string>
     <string name="any_back_camera">后置摄像头</string>
-
-    <!-- Camera flip names -->
     <string name="horizontal">水平偏移</string>
     <string name="vertical">竖直偏移</string>
     <string name="reverse">颠倒</string>
-
-    <!-- Audio input types -->
     <string name="static_noise">静态噪声</string>
     <string name="real_cubeb">实体设备 (cubeb)</string>
     <string name="real_openal">实体设备 (OpenAL)</string>
-
-    <!-- Render 3D modes -->
     <string name="side_by_side">并排屏幕</string>
     <string name="anaglyph">立体图形</string>
     <string name="interlaced">交错</string>
     <string name="reverse_interlaced">逆向交错</string>
-
-    <!-- Graphics API names -->
     <string name="opengles">OpenGL ES</string>
     <string name="vulkan">Vulkan</string>
-
-    <!-- Texture filter names -->
     <string name="anime4k">Anime4K</string>
     <string name="bicubic">双三线过滤</string>
     <string name="nearest_neighbor">近邻取样</string>
     <string name="scaleforce">强制缩放</string>
     <string name="xbrz">xBRZ</string>
     <string name="mmpx">MMPX</string>
-
-    <!-- Sound output modes -->
     <string name="mono">单声道</string>
     <string name="stereo">立体声</string>
     <string name="surround">环绕声</string>
-
-    <!-- Countries -->
     <string name="japan">日本</string>
     <string name="anguilla">安圭拉</string>
     <string name="antigua_and_barbuda">安提瓜和巴布达</string>
@@ -613,8 +529,6 @@
     <string name="san_marino">圣马力诺</string>
     <string name="vatican_city">梵蒂冈城</string>
     <string name="bermuda">百慕大群岛</string>
-
-    <!-- Months -->
     <string name="january">一月</string>
     <string name="february">二月</string>
     <string name="march">三月</string>
@@ -627,8 +541,6 @@
     <string name="october">十月</string>
     <string name="november">十一月</string>
     <string name="december">十二月</string>
-
-    <!-- VR-specific -->
     <string name="preferences_vr">VR</string>
     <string name="vr_background">VR环境</string>
     <string name="vr_error_two_instances_title">错误：检测到两个CitraVR实例</string>
