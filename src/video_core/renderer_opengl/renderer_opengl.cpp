@@ -30,7 +30,10 @@ namespace {
 
 bool ShouldFlipAndroidVrAtlas(const Layout::FramebufferLayout& layout) {
 #ifdef ANDROID
-    return true;
+    // Azahar's Android renderer presents the OpenXR game surface upright with positive layer
+    // geometry. CitraVR's old HorizonOS workaround flipped each atlas half here, which now
+    // double-flips Citra-rendered surfaces after the Azahar merge.
+    return false;
 #else
     return false;
 #endif

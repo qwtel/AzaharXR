@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <string_view>
+
 #include <boost/hana/string.hpp>
 #include "common/setting_keys.h"
 
@@ -13,7 +15,7 @@ namespace DefaultINI {
 
 // All of these setting keys are either not currently used by Android or are too niche to bother
 // documenting (people can contribute documentation if they care), or some other explained reason
-constexpr std::array android_config_omitted_keys = {
+constexpr std::array<std::string_view, 23> android_config_omitted_keys = {
     Keys::enable_gamemode,
     Keys::use_custom_storage,
     Keys::init_time_offset,
