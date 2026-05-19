@@ -17,6 +17,9 @@ include(CMakeDependentOption)
 
 project(citra LANGUAGES C CXX ASM)
 
+# Emit compile_commands.json for clangd and other tools (written to the build directory).
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # Some submodules like to pick their own default build type if not specified.
 # Make sure we default to Release build type always, unless the generator has custom types.
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)

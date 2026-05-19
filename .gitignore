@@ -1,3 +1,7 @@
+# clangd / language servers (optional symlink from CMake build dir for tools that only look at repo root)
+compile_commands.json
+.clangd
+
 # Build directory
 [Bb]uild*/
 doc-build/
