@@ -102,6 +102,36 @@ void ForwardButtonStateIfNeeded(JNIEnv* jni, jobject activityObject,
     }
 }
 
+struct ForwardedJoystickState {
+    float x = 0.0f;
+    float y = 0.0f;
+};
+
+bool IsJoystickNonZero(const float x, const float y) {
+    return x != 0.0f || y != 0.0f;
+}
+
+void ForwardJoystickStateIfNeeded(JNIEnv* jni, jobject activityObject,
+                                  jmethodID forwardVRJoystickMethodID,
+                                  const XrActionStateVector2f* actionState,
+                                  const int joystickType, const char* joystickName) {
+    static ForwardedJoystickState lastForwardedState[2] = {};
+
+    const bool actionActive = actionState != nullptr && actionState->isActive == XR_TRUE;
+    const float x = actionActive ? actionState->currentState.x : 0.0f;
+    const float y = actionActive ? actionState->currentState.y : 0.0f;
+    const bool changed = actionState != nullptr && actionState->changedSinceLastSync;
+
+    ForwardedJoystickState& last = lastForwardedState[joystickType];
+    if (!changed && !IsJoystickNonZero(x, y) && !IsJoystickNonZero(last.x, last.y)) {
+        return;
+    }
+
+    ALOG_INPUT_VERBOSE("Forwarding {} joystick state: {}, {}", joystickName, x, y);
+    jni->CallVoidMethod(activityObject, forwardVRJoystickMethodID, x, y, joystickType);
+    last = {x, y};
+}
+
 void SendTriggerStateToWindow(JNIEnv* jni, jobject activityObject,
                               jmethodID                   sendClickToWindowMethodID,
                               const XrActionStateBoolean& triggerState,
@@ -583,26 +613,16 @@ private:
                 }
             }
 
-            if (dpadHand != cStickHand) {
-                const auto cStickThumbstickState = inputState.mThumbStickState[cStickHand];
-                if (cStickThumbstickState.currentState.y != 0 ||
-                    cStickThumbstickState.currentState.x != 0 ||
-                    cStickThumbstickState.changedSinceLastSync) {
-                    jni->CallVoidMethod(mActivityObject, mForwardVRJoystickMethodID,
-                                        cStickThumbstickState.currentState.x,
-                                        cStickThumbstickState.currentState.y, 0);
-                }
-            }
-            if (dpadHand != leftStickHand) {
-                const auto leftStickThumbstickState = inputState.mThumbStickState[leftStickHand];
-                if (leftStickThumbstickState.currentState.y != 0 ||
-                    leftStickThumbstickState.currentState.x != 0 ||
-                    leftStickThumbstickState.changedSinceLastSync) {
-                    jni->CallVoidMethod(mActivityObject, mForwardVRJoystickMethodID,
-                                        leftStickThumbstickState.currentState.x,
-                                        leftStickThumbstickState.currentState.y, 1);
-                }
-            }
+            ForwardJoystickStateIfNeeded(jni, mActivityObject, mForwardVRJoystickMethodID,
+                                         dpadHand != cStickHand
+                                             ? &inputState.mThumbStickState[cStickHand]
+                                             : nullptr,
+                                         0, "c-stick");
+            ForwardJoystickStateIfNeeded(jni, mActivityObject, mForwardVRJoystickMethodID,
+                                         dpadHand != leftStickHand
+                                             ? &inputState.mThumbStickState[leftStickHand]
+                                             : nullptr,
+                                         1, "left-stick");
         }
 
 #if !defined(USE_INGAME_MENU)
