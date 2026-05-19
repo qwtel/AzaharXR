@@ -15,8 +15,10 @@ import android.view.MotionEvent.PointerCoords
 import android.view.MotionEvent.PointerProperties
 import android.view.Surface
 import android.view.View
+import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import android.widget.FrameLayout
 import org.citra.citra_emu.utils.Log
 import org.citra.citra_emu.vr.VrActivity
 import java.io.File
@@ -39,6 +41,7 @@ abstract class VrUILayer(
     private val requestedDensity: Float = densityDpi.toFloat()
     private var virtualDisplay: VirtualDisplay? = null
     private var presentation: Presentation? = null
+    private var surfaceHeightDp: Int = 0
 
     val window: Window?
         get() = presentation!!.window
@@ -104,7 +107,7 @@ abstract class VrUILayer(
             }),
             arrayOf(PointerCoords().apply {
                 this.x = x
-                this.y = y
+                this.y = surfaceHeightDp - y
                 pressure = 1f
                 size = 1f
             }),
@@ -127,6 +130,7 @@ abstract class VrUILayer(
         surface: Surface, widthDp: Int,
         heightDp: Int
     ) {
+        surfaceHeightDp = heightDp
         // Create a virtual display based on the exact dimensions needed for the view
         val displayManager = activity.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
         virtualDisplay = displayManager.createVirtualDisplay(
@@ -135,7 +139,26 @@ abstract class VrUILayer(
         )
         presentation = Presentation(activity.applicationContext, virtualDisplay!!.display).apply {
             window?.setType(WindowManager.LayoutParams.TYPE_PRIVATE_PRESENTATION)
-            setContentView(layoutId)
+            // CitraVR keeps OpenXR layer sizes positive for current HorizonOS runtimes. Flip the
+            // Android UI content here to preserve the old negative-layer visual orientation.
+            val contentView = LayoutInflater.from(context).inflate(layoutId, null, false).apply {
+                pivotY = 0f
+                scaleY = -1f
+                translationY = heightDp.toFloat()
+            }
+            val root = FrameLayout(context).apply {
+                clipChildren = false
+                clipToPadding = false
+                layoutParams = ViewGroup.LayoutParams(widthDp, heightDp)
+                addView(
+                    contentView,
+                    FrameLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                    )
+                )
+            }
+            setContentView(root)
             // Sets the background to transparent. Remove to set background to white
             // (useful for catching overrendering)
             window?.setBackgroundDrawable(ColorDrawable(0))

@@ -296,9 +296,9 @@ void GameSurfaceLayer::FrameTopPanel(const XrSpace& space, std::vector<XrComposi
             XrCompositionLayerCylinderKHR layer = {};
 
             layer.type       = XR_TYPE_COMPOSITION_LAYER_CYLINDER_KHR;
-            layer.layerFlags = XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT;
-            layer.layerFlags |= XR_COMPOSITION_LAYER_CORRECT_CHROMATIC_ABERRATION_BIT;
-            layer.layerFlags |= XR_COMPOSITION_LAYER_UNPREMULTIPLIED_ALPHA_BIT;
+            // layer.layerFlags = XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT;
+            layer.layerFlags = XR_COMPOSITION_LAYER_CORRECT_CHROMATIC_ABERRATION_BIT;
+            // layer.layerFlags |= XR_COMPOSITION_LAYER_UNPREMULTIPLIED_ALPHA_BIT;
             // NOTE: may not want unpremultiplied alpha
 
             layer.space = space;
@@ -327,7 +327,7 @@ void GameSurfaceLayer::FrameTopPanel(const XrSpace& space, std::vector<XrComposi
                                  : GameSurfaceLayer::DEFAULT_CYLINDER_CENTRAL_ANGLE_DEGREES *
                                        immersiveModeFactor) *
                 MATH_FLOAT_PI / 180.0f;
-            layer.aspectRatio              = -static_cast<double>(mTopPanel.AspectRatio());
+            layer.aspectRatio              = static_cast<double>(mTopPanel.AspectRatio());
             layers[layerCount++].mCylinder = layer;
         }
     } else {
@@ -337,9 +337,9 @@ void GameSurfaceLayer::FrameTopPanel(const XrSpace& space, std::vector<XrComposi
             XrCompositionLayerQuad layer     = {};
 
             layer.type       = XR_TYPE_COMPOSITION_LAYER_QUAD;
-            layer.layerFlags = XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT;
-            layer.layerFlags |= XR_COMPOSITION_LAYER_CORRECT_CHROMATIC_ABERRATION_BIT;
-            layer.layerFlags |= XR_COMPOSITION_LAYER_UNPREMULTIPLIED_ALPHA_BIT;
+            // layer.layerFlags = XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT;
+            layer.layerFlags = XR_COMPOSITION_LAYER_CORRECT_CHROMATIC_ABERRATION_BIT;
+            // layer.layerFlags |= XR_COMPOSITION_LAYER_UNPREMULTIPLIED_ALPHA_BIT;
             // NOTE: may not want unpremultiplied alpha
 
             layer.space = space;
@@ -356,7 +356,7 @@ void GameSurfaceLayer::FrameTopPanel(const XrSpace& space, std::vector<XrComposi
             // Scale to get the desired density within the visible area (if we
             // want).
             const auto scale  = GetDensityScaleForSize(mTopPanel.mWidth - cropHoriz,
-                                                       -mTopPanel.mHeight, 1.0f, mResolutionFactor);
+                                                       mTopPanel.mHeight, 1.0f, mResolutionFactor);
             layer.size.width  = scale.x;
             layer.size.height = scale.y;
 
@@ -383,9 +383,9 @@ void GameSurfaceLayer::FrameLowerPanel(const XrSpace&                   space,
     XrCompositionLayerQuad layer     = {};
 
     layer.type       = XR_TYPE_COMPOSITION_LAYER_QUAD;
-    layer.layerFlags = XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT;
-    layer.layerFlags |= XR_COMPOSITION_LAYER_CORRECT_CHROMATIC_ABERRATION_BIT;
-    layer.layerFlags |= XR_COMPOSITION_LAYER_UNPREMULTIPLIED_ALPHA_BIT;
+    // layer.layerFlags = XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT;
+    layer.layerFlags = XR_COMPOSITION_LAYER_CORRECT_CHROMATIC_ABERRATION_BIT;
+    // layer.layerFlags |= XR_COMPOSITION_LAYER_UNPREMULTIPLIED_ALPHA_BIT;
     // NOTE: may not want unpremultiplied alpha
 
     layer.space = space;
@@ -401,7 +401,7 @@ void GameSurfaceLayer::FrameLowerPanel(const XrSpace&                   space,
     layer.subImage.imageRect.extent.height = mLowerPanel.mHeight / immersiveModeFactor;
     layer.subImage.imageArrayIndex         = 0;
     layer.pose                             = mLowerPanel.mWorldFromPanel;
-    const auto scale  = GetDensityScaleForSize(mLowerPanel.mWidth - cropHoriz, -mLowerPanel.mHeight,
+    const auto scale  = GetDensityScaleForSize(mLowerPanel.mWidth - cropHoriz, mLowerPanel.mHeight,
                                                mLowerPanel.mScaleFactor, mResolutionFactor);
     layer.size.width  = scale.x;
     layer.size.height = scale.y;
