@@ -26,21 +26,6 @@ namespace OpenGL {
 MICROPROFILE_DEFINE(OpenGL_RenderFrame, "OpenGL", "Render Frame", MP_RGB(128, 128, 64));
 MICROPROFILE_DEFINE(OpenGL_WaitPresent, "OpenGL", "Wait For Present", MP_RGB(128, 128, 128));
 
-namespace {
-
-bool ShouldFlipAndroidVrAtlas(const Layout::FramebufferLayout& layout) {
-#ifdef ANDROID
-    // Azahar's Android renderer presents the OpenXR game surface upright with positive layer
-    // geometry. CitraVR's old HorizonOS workaround flipped each atlas half here, which now
-    // double-flips Citra-rendered surfaces after the Azahar merge.
-    return false;
-#else
-    return false;
-#endif
-}
-
-} // namespace
-
 /**
  * Vertex structure that the drawn screen rectangles are composed of.
  */
@@ -927,22 +912,8 @@ void RendererOpenGL::TryPresent(int timeout_ms, bool is_secondary) {
     // frame.render_sync = 0;
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, frame->present.handle);
-    if (ShouldFlipAndroidVrAtlas(layout)) {
-        // The CitraVR OpenXR layer path used negative quad heights/cylinder aspect ratios to make
-        // Android surface contents appear upright. Newer HorizonOS runtimes do not reliably compose
-        // those negative-sized layers, so keep OpenXR geometry positive and reproduce the flip
-        // inside each VR atlas half instead. Flipping the full surface would swap the top and touch
-        // panels.
-        const GLint src_half_height = static_cast<GLint>(frame->height / 2);
-        const GLint dst_half_height = static_cast<GLint>(layout.height / 2);
-        glBlitFramebuffer(0, src_half_height, frame->width, frame->height, 0, layout.height,
-                          layout.width, dst_half_height, GL_COLOR_BUFFER_BIT, GL_LINEAR);
-        glBlitFramebuffer(0, 0, frame->width, src_half_height, 0, dst_half_height, layout.width, 0,
-                          GL_COLOR_BUFFER_BIT, GL_LINEAR);
-    } else {
-        glBlitFramebuffer(0, 0, frame->width, frame->height, 0, 0, layout.width, layout.height,
-                          GL_COLOR_BUFFER_BIT, GL_LINEAR);
-    }
+    glBlitFramebuffer(0, 0, frame->width, frame->height, 0, 0, layout.width, layout.height,
+                      GL_COLOR_BUFFER_BIT, GL_LINEAR);
 
     // Delete the fence if we're re-presenting to avoid leaking fences
     if (frame->present_fence) {

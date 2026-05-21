@@ -122,8 +122,7 @@ Panel CreateTopPanel(const XrVector3f& position, const float surfaceWidth,
  *
  *    Note: all values are chosen to be aesthetically pleasing and can be modified.
  */
-Panel CreateLowerPanelFromTopPanel(const Panel& topPanel, const float resolutionFactor,
-                                   const bool isImmersiveModeEnabled) {
+Panel CreateLowerPanelFromTopPanel(const Panel& topPanel, const bool isImmersiveModeEnabled) {
     // Note: the fact that two constants are 0.75 is purely coincidental.
     constexpr float kDefaultLowerPanelScaleFactor     = 0.75f * 0.75f;
     constexpr float kDefaultLowerPanelYOffsetInMeters = -0.75f;
@@ -173,8 +172,7 @@ XrQuaternionf CalculatePanelRotation(const XrVector3f& windowPosition,
 
 bool GetRayIntersectionWithPanel(const Panel& panel, const XrVector2f& scaleFactor,
                                  const XrVector3f& start, const XrVector3f& end,
-                                 XrVector2f& result2d, XrPosef& result3d,
-                                 const float resolutionFactor)
+                                 XrVector2f& result2d, XrPosef& result3d)
 
 {
     const XrPosef    panelFromWorld = XrMath::Posef::Inverted(panel.mWorldFromPanel);
@@ -205,17 +203,6 @@ bool GetRayIntersectionWithPanel(const Panel& panel, const XrVector2f& scaleFact
     if (!isInBounds) { return false; }
 
     return true;
-}
-
-// Uses a density for scaling and sets aspect ratio
-XrVector2f GetDensityScaleForSize(const int32_t  texWidth,
-                                  const int32_t  texHeight,
-                                  const float    scaleFactor,
-                                  const uint32_t resolutionFactor) {
-    const float density = GetDensitySysprop(resolutionFactor);
-    return XrVector2f{2.0f * static_cast<float>(texWidth) / density,
-                      (static_cast<float>(texHeight) / density)} *
-           scaleFactor;
 }
 
 XrVector2f GetDensityScaleFor3dsScreen(const uint32_t screenWidth,
@@ -263,8 +250,7 @@ GameSurfaceLayer::GameSurfaceLayer(const XrVector3f&& position, JNIEnv* env, job
     , mTopPanel(CreateTopPanel(position,
                                (SURFACE_WIDTH_UNSCALED * mResolutionFactor),
                                (SURFACE_HEIGHT_UNSCALED * mResolutionFactor)))
-    , mLowerPanel(CreateLowerPanelFromTopPanel(mTopPanel, mResolutionFactor,
-                                               VRSettings::values.vr_immersive_mode))
+    , mLowerPanel(CreateLowerPanelFromTopPanel(mTopPanel, VRSettings::values.vr_immersive_mode))
     , mImmersiveMode(VRSettings::values.vr_immersive_mode)
     , mEnv(env)
 
@@ -336,7 +322,8 @@ void GameSurfaceLayer::FrameTopPanel(const XrSpace& space, std::vector<XrComposi
                                  : GameSurfaceLayer::DEFAULT_CYLINDER_CENTRAL_ANGLE_DEGREES *
                                        immersiveModeFactor) *
                 MATH_FLOAT_PI / 180.0f;
-            layer.aspectRatio              = -static_cast<double>(mTopPanel.AspectRatio());
+            layer.aspectRatio = -static_cast<double>(
+                static_cast<float>(Core::kScreenTopWidth) / Core::kScreenTopHeight);
             layers[layerCount++].mCylinder = layer;
         }
     } else {
@@ -422,8 +409,7 @@ bool GameSurfaceLayer::GetRayIntersectionWithPanelTopPanel(const XrVector3f& sta
 {
     const auto scale = GetDensityScaleFor3dsScreen(Core::kScreenTopWidth, Core::kScreenTopHeight,
                                                    mTopPanel.mScaleFactor, mResolutionFactor);
-    return ::GetRayIntersectionWithPanel(mTopPanel, scale, start, end, result2d, result3d,
-                                         mResolutionFactor);
+    return ::GetRayIntersectionWithPanel(mTopPanel, scale, start, end, result2d, result3d);
 }
 
 bool GameSurfaceLayer::GetRayIntersectionWithPanel(const XrVector3f& start,
@@ -433,8 +419,7 @@ bool GameSurfaceLayer::GetRayIntersectionWithPanel(const XrVector3f& start,
     const XrVector2f scale =
         GetDensityScaleFor3dsScreen(Core::kScreenBottomWidth, Core::kScreenBottomHeight,
                                     mLowerPanel.mScaleFactor, mResolutionFactor);
-    return ::GetRayIntersectionWithPanel(mLowerPanel, scale, start, end, result2d, result3d,
-                                         mResolutionFactor);
+    return ::GetRayIntersectionWithPanel(mLowerPanel, scale, start, end, result2d, result3d);
 }
 
 void GameSurfaceLayer::SetTopPanelFromController(const XrVector3f& controllerPosition) {
