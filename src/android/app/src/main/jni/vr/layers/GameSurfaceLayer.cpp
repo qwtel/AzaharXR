@@ -132,9 +132,6 @@ Panel CreateLowerPanelFromTopPanel(const Panel& topPanel, const float resolution
     constexpr float kImmersiveLowerPanelYOffsetInMeters = -1.0f;
     constexpr float kImmersiveLowerPanelZOffsetInMeters = 0.0f;
 
-    // Pitch the lower panel away from the viewer 45 degrees
-    const float cropHoriz = 90.0f * resolutionFactor;
-
     XrPosef lowerPanelFromWorld = topPanel.mWorldFromPanel;
     lowerPanelFromWorld.orientation =
         XrMath::Quatf::FromEuler(kInitialLowerPanelPitchInRadians, 0, 0);
@@ -143,8 +140,7 @@ Panel CreateLowerPanelFromTopPanel(const Panel& topPanel, const float resolution
     lowerPanelFromWorld.position.z += isImmersiveModeEnabled ? kImmersiveLowerPanelZOffsetInMeters
                                                              : kDefaultLowerPanelZOffsetInMeters;
     return Panel(lowerPanelFromWorld, topPanel.mWidth, topPanel.mHeight,
-                 kDefaultLowerPanelScaleFactor, XrVector2f{cropHoriz / 2.0f, 0.0f},
-                 XrVector2f{topPanel.mWidth - cropHoriz / 2.0f, topPanel.mHeight});
+                 kDefaultLowerPanelScaleFactor);
 }
 
 XrVector3f CalculatePanelPosition(const XrVector3f& viewerPosition,
@@ -203,7 +199,7 @@ bool GetRayIntersectionWithPanel(const Panel& panel, const XrVector2f& scaleFact
     panel.Transform(result2dNDC, result2d);
     const bool isInBounds =
         result2d.x >= panel.mClickBounds.mMin.x && result2d.y >= panel.mClickBounds.mMin.y &&
-        result2d.x < panel.mClickBounds.mMax.x && result2d.y < panel.mClickBounds.mMax.x;
+        result2d.x < panel.mClickBounds.mMax.x && result2d.y < panel.mClickBounds.mMax.y;
     result2d.y += panel.mHeight;
 
     if (!isInBounds) { return false; }
@@ -219,6 +215,19 @@ XrVector2f GetDensityScaleForSize(const int32_t  texWidth,
     const float density = GetDensitySysprop(resolutionFactor);
     return XrVector2f{2.0f * static_cast<float>(texWidth) / density,
                       (static_cast<float>(texHeight) / density)} *
+           scaleFactor;
+}
+
+XrVector2f GetDensityScaleFor3dsScreen(const uint32_t screenWidth,
+                                       const int32_t screenHeight,
+                                       const float scaleFactor,
+                                       const uint32_t resolutionFactor) {
+    const float density = GetDensitySysprop(resolutionFactor);
+    const float visibleHalfWidth =
+        static_cast<float>(screenWidth * resolutionFactor) / 2.0f;
+    const float visibleHeight =
+        static_cast<float>(screenHeight) * static_cast<float>(resolutionFactor);
+    return XrVector2f{2.0f * visibleHalfWidth / density, visibleHeight / density} *
            scaleFactor;
 }
 
@@ -333,7 +342,6 @@ void GameSurfaceLayer::FrameTopPanel(const XrSpace& space, std::vector<XrComposi
     } else {
         // Create the Top Display Panel (Flat display)
         for (uint32_t eye = 0; eye < 2; eye++) {
-            const uint32_t         cropHoriz = 50 * mResolutionFactor;
             XrCompositionLayerQuad layer     = {};
 
             layer.type       = XR_TYPE_COMPOSITION_LAYER_QUAD;
@@ -347,17 +355,15 @@ void GameSurfaceLayer::FrameTopPanel(const XrSpace& space, std::vector<XrComposi
             layer.eyeVisibility = eye == 0 ? XR_EYE_VISIBILITY_LEFT : XR_EYE_VISIBILITY_RIGHT;
             memset(&layer.subImage, 0, sizeof(XrSwapchainSubImage));
             layer.subImage.swapchain          = mSwapchain.mHandle;
-            layer.subImage.imageRect.offset.x = (eye == 0 ? 0 : mTopPanel.mWidth) + cropHoriz / 2;
+            layer.subImage.imageRect.offset.x = eye == 0 ? 0 : mTopPanel.mWidth;
             layer.subImage.imageRect.offset.y = 0;
-            layer.subImage.imageRect.extent.width  = mTopPanel.mWidth - cropHoriz;
+            layer.subImage.imageRect.extent.width  = mTopPanel.mWidth;
             layer.subImage.imageRect.extent.height = mTopPanel.mHeight - verticalBorderTex;
             layer.subImage.imageArrayIndex         = 0;
             layer.pose                             = mTopPanel.mWorldFromPanel;
-            // Scale to get the desired density within the visible area (if we
-            // want).
-            const auto scale  = GetDensityScaleForSize(mTopPanel.mWidth - cropHoriz,
-                                                       -mTopPanel.mHeight, 1.0f,
-                                                       mResolutionFactor);
+            const auto scale = GetDensityScaleFor3dsScreen(Core::kScreenTopWidth,
+                                                           -Core::kScreenTopHeight, 1.0f,
+                                                           mResolutionFactor);
             layer.size.width  = scale.x;
             layer.size.height = scale.y;
 
@@ -380,7 +386,6 @@ void GameSurfaceLayer::FrameLowerPanel(const XrSpace&                   space,
     // Prevent a seam between the top and bottom view
     constexpr uint32_t verticalBorderTex = 1;
 
-    const uint32_t         cropHoriz = 90 * mResolutionFactor;
     XrCompositionLayerQuad layer     = {};
 
     layer.type       = XR_TYPE_COMPOSITION_LAYER_QUAD;
@@ -394,16 +399,16 @@ void GameSurfaceLayer::FrameLowerPanel(const XrSpace&                   space,
     layer.eyeVisibility = XR_EYE_VISIBILITY_BOTH;
     memset(&layer.subImage, 0, sizeof(XrSwapchainSubImage));
     layer.subImage.swapchain          = mSwapchain.mHandle;
-    layer.subImage.imageRect.offset.x = (cropHoriz / 2) / immersiveModeFactor +
-                                        mLowerPanel.mWidth * (0.5f - (0.5f / immersiveModeFactor));
+    layer.subImage.imageRect.offset.x = mLowerPanel.mWidth * (0.5f - (0.5f / immersiveModeFactor));
     layer.subImage.imageRect.offset.y = mLowerPanel.mHeight + verticalBorderTex +
                                         mLowerPanel.mHeight * (0.5f - (0.5f / immersiveModeFactor));
-    layer.subImage.imageRect.extent.width  = (mLowerPanel.mWidth - cropHoriz) / immersiveModeFactor;
+    layer.subImage.imageRect.extent.width  = mLowerPanel.mWidth / immersiveModeFactor;
     layer.subImage.imageRect.extent.height = mLowerPanel.mHeight / immersiveModeFactor;
     layer.subImage.imageArrayIndex         = 0;
     layer.pose                             = mLowerPanel.mWorldFromPanel;
-    const auto scale  = GetDensityScaleForSize(mLowerPanel.mWidth - cropHoriz, -mLowerPanel.mHeight,
-                                               mLowerPanel.mScaleFactor, mResolutionFactor);
+    const auto scale = GetDensityScaleFor3dsScreen(Core::kScreenBottomWidth,
+                                                   -Core::kScreenBottomHeight,
+                                                   mLowerPanel.mScaleFactor, mResolutionFactor);
     layer.size.width  = scale.x;
     layer.size.height = scale.y;
     layers[layerCount++].mQuad = layer;
@@ -415,8 +420,8 @@ bool GameSurfaceLayer::GetRayIntersectionWithPanelTopPanel(const XrVector3f& sta
                                                            XrPosef&          result3d) const
 
 {
-    const auto scale = GetDensityScaleForSize(mTopPanel.mWidth, mTopPanel.mHeight,
-                                              mTopPanel.mScaleFactor, mResolutionFactor);
+    const auto scale = GetDensityScaleFor3dsScreen(Core::kScreenTopWidth, Core::kScreenTopHeight,
+                                                   mTopPanel.mScaleFactor, mResolutionFactor);
     return ::GetRayIntersectionWithPanel(mTopPanel, scale, start, end, result2d, result3d,
                                          mResolutionFactor);
 }
@@ -425,8 +430,9 @@ bool GameSurfaceLayer::GetRayIntersectionWithPanel(const XrVector3f& start,
                                                    const XrVector3f& end,
                                                    XrVector2f&       result2d,
                                                    XrPosef&          result3d) const {
-    const XrVector2f scale = GetDensityScaleForSize(mLowerPanel.mWidth, mLowerPanel.mHeight,
-                                                    mLowerPanel.mScaleFactor, mResolutionFactor);
+    const XrVector2f scale =
+        GetDensityScaleFor3dsScreen(Core::kScreenBottomWidth, Core::kScreenBottomHeight,
+                                    mLowerPanel.mScaleFactor, mResolutionFactor);
     return ::GetRayIntersectionWithPanel(mLowerPanel, scale, start, end, result2d, result3d,
                                          mResolutionFactor);
 }
