@@ -858,6 +858,10 @@
     <string name="vr_extra_performance_mode">VR Extra Performance Mode</string>
     <string name="vr_cpu_level">CPU level</string>
     <string name="vr_cpu_level_description">Higher levels may improve audio/emulation performance, but will drain the battery faster</string>
+    <string name="vr_dpad_thumbrest_mode">Thumbrest D-Pad Mode</string>
+    <string name="vr_dpad_thumbrest_mode_description">Choose which thumbrest can turn a thumbstick into the D-Pad.</string>
+    <string name="vr_dpad_thumbrest_mode_both">Either thumbrest, opposite stick</string>
+    <string name="vr_dpad_thumbrest_mode_left_to_right">Left thumbrest, right stick only</string>
     <string name="vr_motion_source">Motion Controls Source</string>
     <string name="vr_motion_source_description">Use a tracked VR device as the 3DS motion sensor.</string>
     <string name="vr_motion_source_off">Off</string>

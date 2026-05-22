@@ -346,6 +346,8 @@ void Config::ReadValues() {
     VRSettings::values.vr_immersive_mode = android_config->GetInteger(
             "VR", "vr_immersive_mode", 0);
     Settings::values.vr_immersive_mode = VRSettings::values.vr_immersive_mode;
+    VRSettings::values.vr_dpad_thumbrest_mode = android_config->GetInteger(
+            "VR", "vr_dpad_thumbrest_mode", 0);
     VRSettings::values.vr_motion_source = android_config->GetInteger(
             "VR", "vr_motion_source", static_cast<long>(VRSettings::VRMotionSource::COMBINED));
     VRSettings::values.vr_si_mode_register_offset = android_config->GetInteger(

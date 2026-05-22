@@ -2012,6 +2012,17 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
             )
             add(
                 SingleChoiceSetting(
+                    IntSetting.VR_DPAD_THUMBREST_MODE,
+                    R.string.vr_dpad_thumbrest_mode,
+                    R.string.vr_dpad_thumbrest_mode_description,
+                    R.array.vrDpadThumbrestModeNames,
+                    R.array.vrDpadThumbrestModeValues,
+                    IntSetting.VR_DPAD_THUMBREST_MODE.key,
+                    IntSetting.VR_DPAD_THUMBREST_MODE.defaultValue
+                )
+            )
+            add(
+                SingleChoiceSetting(
                     IntSetting.VR_MOTION_SOURCE,
                     R.string.vr_motion_source,
                     R.string.vr_motion_source_description,

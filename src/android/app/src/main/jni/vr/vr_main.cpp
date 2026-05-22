@@ -750,8 +750,8 @@ private:
             inputState.mThumbStickClickState[InputStateFrame::RIGHT_CONTROLLER], "start");
 
         {
-            // Right is circlepad, left is leftstick/circlepad, dpad is whatever
-            // has thumbstick pressed.
+            // Right is C-stick, left is leftstick/circlepad. Thumbrests can
+            // temporarily turn a stick into the d-pad.
             const auto leftStickHand = InputStateFrame::LEFT_CONTROLLER;
             const auto cStickHand    = InputStateFrame::RIGHT_CONTROLLER;
 
@@ -759,10 +759,13 @@ private:
                 inputState.mThumbrestTouchState[InputStateFrame::LEFT_CONTROLLER];
             const auto& rightThumbrestTouchState =
                 inputState.mThumbrestTouchState[InputStateFrame::RIGHT_CONTROLLER];
+            const bool allowRightThumbrestDpad =
+                VRSettings::values.vr_dpad_thumbrest_mode == 0;
             const int dpadHand =
-                leftThumbrestTouchState.currentState    ? InputStateFrame::RIGHT_CONTROLLER
-                : rightThumbrestTouchState.currentState ? InputStateFrame::LEFT_CONTROLLER
-                                                        : InputStateFrame::NUM_CONTROLLERS;
+                leftThumbrestTouchState.currentState ? InputStateFrame::RIGHT_CONTROLLER
+                : allowRightThumbrestDpad && rightThumbrestTouchState.currentState
+                    ? InputStateFrame::LEFT_CONTROLLER
+                    : InputStateFrame::NUM_CONTROLLERS;
 
             {
                 static constexpr float kThumbStickDirectionThreshold = 0.5f;
