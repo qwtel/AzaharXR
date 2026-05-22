@@ -524,6 +524,11 @@ vr_extra_performance_mode =
 # OpenXR CPU performance level. Defaults to 3 in CitraVR.
 vr_cpu_level =
 
+# Source for VR-tracked motion controls.
+# 0: Off, 1: HMD, 2: Left controller, 3: Right controller,
+# 5 (default): Combined
+vr_motion_source =
+
 # 0: Off, higher values enable CitraVR immersive rendering modes.
 vr_immersive_mode =
 vr_si_mode_register_offset =

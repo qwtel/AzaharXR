@@ -28,6 +28,13 @@ namespace VRSettings {
 enum class HMDType { UNKNOWN = 0, QUEST1, QUEST2, QUEST3, QUESTPRO, QUEST3S };
 
 enum class VREnvironmentType { PASSTHROUGH = 1, VOID = 2 };
+enum class VRMotionSource {
+    OFF = 0,
+    HMD = 1,
+    LEFT_CONTROLLER = 2,
+    RIGHT_CONTROLLER = 3,
+    COMBINED = 5
+};
 
 // Given a CPU level preference, return the corresponding OpenXR performance
 // level
@@ -43,6 +50,7 @@ struct Values {
     uint32_t               resolution_factor = 0;
     int32_t                vr_environment    = 0;
     int32_t                vr_immersive_mode = 0;
+    int32_t                vr_motion_source                    = 5;
     bool                   extra_performance_mode_enabled      = false;
     int32_t                vr_si_mode_register_offset          = -1;
     int32_t                vr_factor_3d                        = 100;

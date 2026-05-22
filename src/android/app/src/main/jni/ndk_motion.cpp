@@ -12,6 +12,10 @@ namespace InputManager {
 
 namespace {
 using Common::Vec3;
+
+std::atomic<bool>        external_motion_enabled = false;
+std::atomic<Vec3<float>> external_acceleration{};
+std::atomic<Vec3<float>> external_rotation{};
 }
 
 class NDKMotion final : public Input::MotionDevice {
@@ -132,6 +136,9 @@ public:
     }
 
     std::tuple<Vec3<float>, Vec3<float>> GetStatus() const override {
+        if (external_motion_enabled) {
+            return {external_acceleration.load(), external_rotation.load()};
+        }
         if (std::thread::id{} == poll_thread.get_id()) {
             Update();
         }
@@ -190,6 +197,13 @@ void NDKMotionFactory::EnableSensors() {
 void NDKMotionFactory::DisableSensors() {
     if (ndk_motion_device)
         ndk_motion_device->DisableSensors();
+}
+
+void NDKMotionFactory::SetExternalMotionStatus(bool enabled, Vec3<float> acceleration,
+                                               Vec3<float> rotation) {
+    external_acceleration = acceleration;
+    external_rotation = rotation;
+    external_motion_enabled = enabled;
 }
 
 } // namespace InputManager

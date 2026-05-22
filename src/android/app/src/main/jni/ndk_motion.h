@@ -21,6 +21,8 @@ public:
 
     void EnableSensors();
     void DisableSensors();
+    static void SetExternalMotionStatus(bool enabled, Common::Vec3<float> acceleration,
+                                        Common::Vec3<float> rotation);
 
 private:
     NDKMotion* ndk_motion_device;

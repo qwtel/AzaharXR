@@ -40,6 +40,7 @@ License     :   Licensed under GPLv3 or any later version.
 #include <unistd.h>
 
 #include "core/core.h"
+#include "jni/ndk_motion.h"
 #include "video_core/gpu.h"
 #include "video_core/renderer_base.h"
 
@@ -80,6 +81,111 @@ std::unique_ptr<OpenXr>                            gOpenXr;
 MessageQueue                                       gMessageQueue;
 
 const std::vector<float> immersiveScaleFactor = {1.0f, 3.0f, 1.4f};
+
+struct VRMotionState {
+    int           source = -1;
+    XrTime        last_time = 0;
+    XrQuaternionf last_orientation = XrMath::Quatf::Identity();
+    XrQuaternionf last_neutral_orientation = XrMath::Quatf::Identity();
+};
+
+VRMotionState gVRMotionState;
+
+XrQuaternionf Normalize(const XrQuaternionf& q) {
+    const float length = sqrtf(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w);
+    if (length <= MATH_FLOAT_EPSILON) {
+        return XrMath::Quatf::Identity();
+    }
+    return {q.x / length, q.y / length, q.z / length, q.w / length};
+}
+
+Common::Vec3<float> XrToMotionAxes(const XrVector3f& v) {
+    return {-v.x, v.y, -v.z};
+}
+
+float QuaternionDot(const XrQuaternionf& a, const XrQuaternionf& b) {
+    return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
+}
+
+XrQuaternionf CalculateScreenNeutralOrientation(const XrPosef& headPose,
+                                                const XrPosef& topPanelPose) {
+    XrVector3f backward = headPose.position - topPanelPose.position;
+    if (XrMath::Vector3f::LengthSq(backward) < MATH_FLOAT_EPSILON) {
+        return XrMath::Quatf::Identity();
+    }
+    XrMath::Vector3f::Normalize(backward);
+
+    XrVector3f up{0.0f, 1.0f, 0.0f};
+    XrVector3f right = XrMath::Vector3f::Cross(up, backward);
+    if (XrMath::Vector3f::LengthSq(right) < MATH_FLOAT_EPSILON) {
+        right = XrMath::Vector3f::Cross(XrVector3f{1.0f, 0.0f, 0.0f}, backward);
+    }
+    XrMath::Vector3f::Normalize(right);
+    up = XrMath::Vector3f::Cross(backward, right);
+    XrMath::Vector3f::Normalize(up);
+
+    return Normalize(XrMath::Quatf::FromThreeVectors(backward, up, right));
+}
+
+XrQuaternionf MakeNeutralRelativeOrientation(const XrQuaternionf& orientation,
+                                             const XrQuaternionf& neutral_orientation) {
+    return Normalize(XrMath::Quatf::Inverted(neutral_orientation) * orientation);
+}
+
+bool HasValidOrientation(const XrSpaceLocation& location) {
+    return (location.locationFlags & XR_SPACE_LOCATION_ORIENTATION_VALID_BIT) != 0;
+}
+
+Common::Vec3<float> CalculateMotionAcceleration(const XrQuaternionf& orientation) {
+    const XrQuaternionf inverse = XrMath::Quatf::Inverted(orientation);
+    const XrVector3f gravity_in_device_space =
+        XrMath::Quatf::Rotate(inverse, XrVector3f{0.0f, -1.0f, 0.0f});
+    return XrToMotionAxes(gravity_in_device_space);
+}
+
+Common::Vec3<float> CalculateMotionRotation(const XrQuaternionf& orientation,
+                                            const XrQuaternionf& neutral_orientation,
+                                            const XrTime predicted_display_time,
+                                            const int source) {
+    if (gVRMotionState.source != source || gVRMotionState.last_time == 0 ||
+        predicted_display_time <= gVRMotionState.last_time ||
+        std::abs(QuaternionDot(neutral_orientation, gVRMotionState.last_neutral_orientation)) <
+            0.9999f) {
+        gVRMotionState.source = source;
+        gVRMotionState.last_time = predicted_display_time;
+        gVRMotionState.last_orientation = orientation;
+        gVRMotionState.last_neutral_orientation = neutral_orientation;
+        return {};
+    }
+
+    XrQuaternionf delta =
+        Normalize(orientation * XrMath::Quatf::Inverted(gVRMotionState.last_orientation));
+    if (delta.w < 0.0f) {
+        delta = {-delta.x, -delta.y, -delta.z, -delta.w};
+    }
+
+    const float vector_length = sqrtf(delta.x * delta.x + delta.y * delta.y + delta.z * delta.z);
+    Common::Vec3<float> rotation{};
+    if (vector_length > MATH_FLOAT_EPSILON) {
+        const float seconds =
+            static_cast<float>(predicted_display_time - gVRMotionState.last_time) / 1000000000.0f;
+        const float angle = 2.0f * atan2f(vector_length, delta.w);
+        const XrVector3f angular_velocity_world = {
+            delta.x / vector_length * angle / seconds,
+            delta.y / vector_length * angle / seconds,
+            delta.z / vector_length * angle / seconds,
+        };
+        const XrVector3f angular_velocity_device = XrMath::Quatf::Rotate(
+            XrMath::Quatf::Inverted(orientation), angular_velocity_world);
+        rotation = XrToMotionAxes(angular_velocity_device) * 180.0f / MATH_FLOAT_PI;
+    }
+
+    gVRMotionState.source = source;
+    gVRMotionState.last_time = predicted_display_time;
+    gVRMotionState.last_orientation = orientation;
+    gVRMotionState.last_neutral_orientation = neutral_orientation;
+    return rotation;
+}
 
 void ForwardButtonStateChangeToCitra(JNIEnv* jni, jobject activityObject,
                                      jmethodID forwardVRInputMethodID, const int androidButtonCode,
@@ -435,6 +541,7 @@ private:
 
         mInputStateFrame.SyncHandPoses(gOpenXr->mSession, mInputStateStatic, gOpenXr->mLocalSpace,
                                        frameState.predictedDisplayTime);
+        UpdateVRMotionControls(frameState.predictedDisplayTime);
 
         ///////////////////////////////////////////////////
         // Super Immersive Mode update and computation.
@@ -520,6 +627,100 @@ private:
                                              static_cast<uint32_t>(layerHeaders.size()),
                                              layerHeaders.data()};
         OXR(xrEndFrame(gOpenXr->mSession, &endFrameInfo));
+    }
+
+    void UpdateVRMotionControls(const XrTime predictedDisplayTime) const {
+        const auto source =
+            static_cast<VRSettings::VRMotionSource>(VRSettings::values.vr_motion_source);
+        XrPosef pose = XrMath::Posef::Identity();
+        bool has_pose = false;
+
+        switch (source) {
+            case VRSettings::VRMotionSource::HMD:
+                has_pose =
+                    (gOpenXr->headLocation.locationFlags & XR_SPACE_LOCATION_ORIENTATION_VALID_BIT) !=
+                    0;
+                pose = gOpenXr->headLocation.pose;
+                break;
+            case VRSettings::VRMotionSource::LEFT_CONTROLLER:
+                pose = mInputStateFrame.mHandPositions[InputStateFrame::LEFT_CONTROLLER].pose;
+                has_pose = HasValidOrientation(
+                    mInputStateFrame.mHandPositions[InputStateFrame::LEFT_CONTROLLER]);
+                break;
+            case VRSettings::VRMotionSource::RIGHT_CONTROLLER:
+                pose = mInputStateFrame.mHandPositions[InputStateFrame::RIGHT_CONTROLLER].pose;
+                has_pose = HasValidOrientation(
+                    mInputStateFrame.mHandPositions[InputStateFrame::RIGHT_CONTROLLER]);
+                break;
+            case VRSettings::VRMotionSource::COMBINED: {
+                const XrQuaternionf neutral_orientation = CalculateScreenNeutralOrientation(
+                    gOpenXr->headLocation.pose, mGameSurfaceLayer->GetTopPanelPose());
+                XrQuaternionf motion_orientation = XrMath::Quatf::Identity();
+
+                has_pose = (gOpenXr->headLocation.locationFlags &
+                            XR_SPACE_LOCATION_ORIENTATION_VALID_BIT) != 0;
+                if (has_pose) {
+                    motion_orientation = motion_orientation *
+                                         MakeNeutralRelativeOrientation(
+                                             Normalize(gOpenXr->headLocation.pose.orientation),
+                                             neutral_orientation);
+                }
+
+                const auto& leftHand =
+                    mInputStateFrame.mHandPositions[InputStateFrame::LEFT_CONTROLLER];
+                if (HasValidOrientation(leftHand)) {
+                    motion_orientation = motion_orientation *
+                                         MakeNeutralRelativeOrientation(
+                                             Normalize(leftHand.pose.orientation),
+                                             neutral_orientation);
+                    has_pose = true;
+                }
+
+                const auto& rightHand =
+                    mInputStateFrame.mHandPositions[InputStateFrame::RIGHT_CONTROLLER];
+                if (HasValidOrientation(rightHand)) {
+                    motion_orientation = motion_orientation *
+                                         MakeNeutralRelativeOrientation(
+                                             Normalize(rightHand.pose.orientation),
+                                             neutral_orientation);
+                    has_pose = true;
+                }
+
+                if (has_pose) {
+                    motion_orientation = Normalize(motion_orientation);
+                    InputManager::NDKMotionFactory::SetExternalMotionStatus(
+                        true, CalculateMotionAcceleration(motion_orientation),
+                        CalculateMotionRotation(motion_orientation, neutral_orientation,
+                                                predictedDisplayTime, static_cast<int>(source)));
+                }
+                break;
+            }
+            case VRSettings::VRMotionSource::OFF:
+            default:
+                InputManager::NDKMotionFactory::SetExternalMotionStatus(false, {}, {});
+                gVRMotionState = {};
+                return;
+        }
+
+        if (source == VRSettings::VRMotionSource::COMBINED && has_pose) {
+            return;
+        }
+
+        if (!has_pose) {
+            InputManager::NDKMotionFactory::SetExternalMotionStatus(false, {}, {});
+            gVRMotionState = {};
+            return;
+        }
+
+        pose.orientation = Normalize(pose.orientation);
+        const XrQuaternionf neutral_orientation = CalculateScreenNeutralOrientation(
+            gOpenXr->headLocation.pose, mGameSurfaceLayer->GetTopPanelPose());
+        const XrQuaternionf motion_orientation =
+            MakeNeutralRelativeOrientation(pose.orientation, neutral_orientation);
+        InputManager::NDKMotionFactory::SetExternalMotionStatus(
+            true, CalculateMotionAcceleration(motion_orientation),
+            CalculateMotionRotation(motion_orientation, neutral_orientation, predictedDisplayTime,
+                                    static_cast<int>(source)));
     }
 
     void HandleInput(JNIEnv* jni, const InputStateFrame& inputState, AppState& newState) const {

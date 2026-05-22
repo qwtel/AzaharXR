@@ -187,6 +187,7 @@ public:
     void           SetTopPanelFromThumbstick(const float thumbstickY);
     XrPosef        GetTopPanelFromHeadPose(uint32_t eye, const XrPosef& headPose);
     void           ResetPanelPositions();
+    const XrPosef& GetTopPanelPose() const { return mTopPanel.mWorldFromPanel; }
     const XrPosef& GetLowerPanelPose() const { return mLowerPanel.mWorldFromPanel; }
     void           SetLowerPanelWithPose(const XrPosef& pose);
 

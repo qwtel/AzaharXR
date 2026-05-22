@@ -2011,6 +2011,17 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                 )
             )
             add(
+                SingleChoiceSetting(
+                    IntSetting.VR_MOTION_SOURCE,
+                    R.string.vr_motion_source,
+                    R.string.vr_motion_source_description,
+                    R.array.vrMotionSourceNames,
+                    R.array.vrMotionSourceValues,
+                    IntSetting.VR_MOTION_SOURCE.key,
+                    IntSetting.VR_MOTION_SOURCE.defaultValue
+                )
+            )
+            add(
                 SwitchSetting(
                     BooleanSetting.NEW_3DS,
                     R.string.new_3ds,

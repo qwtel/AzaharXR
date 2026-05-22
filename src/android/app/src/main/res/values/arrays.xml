@@ -615,6 +615,20 @@
         <item>3</item>
         <item>4</item>
     </integer-array>
+    <string-array name="vrMotionSourceNames">
+        <item>@string/vr_motion_source_off</item>
+        <item>@string/vr_motion_source_hmd</item>
+        <item>@string/vr_motion_source_left_controller</item>
+        <item>@string/vr_motion_source_right_controller</item>
+        <item>@string/vr_motion_source_combined</item>
+    </string-array>
+    <integer-array name="vrMotionSourceValues">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>5</item>
+    </integer-array>
     <string-array name="vrPosFactorGameScalerNames">
         <item>1x</item>
         <item>10x</item>
