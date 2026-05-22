@@ -742,6 +742,12 @@ private:
         ForwardButtonStateIfNeeded(
             jni, mActivityObject, mForwardVRInputMethodID, 103 /* BUTTON_R1 */,
             inputState.mSqueezeTriggerState[InputStateFrame::RIGHT_CONTROLLER], "r1");
+        ForwardButtonStateIfNeeded(
+            jni, mActivityObject, mForwardVRInputMethodID, 109 /* BUTTON_SELECT */,
+            inputState.mThumbStickClickState[InputStateFrame::LEFT_CONTROLLER], "select");
+        ForwardButtonStateIfNeeded(
+            jni, mActivityObject, mForwardVRInputMethodID, 108 /* BUTTON_START */,
+            inputState.mThumbStickClickState[InputStateFrame::RIGHT_CONTROLLER], "start");
 
         {
             // Right is circlepad, left is leftstick/circlepad, dpad is whatever
