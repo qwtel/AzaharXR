@@ -615,6 +615,14 @@
         <item>3</item>
         <item>4</item>
     </integer-array>
+    <string-array name="vrDisplayRefreshRateNames">
+        <item>@string/vr_display_refresh_rate_default</item>
+        <item>@string/vr_display_refresh_rate_120</item>
+    </string-array>
+    <integer-array name="vrDisplayRefreshRateValues">
+        <item>0</item>
+        <item>120</item>
+    </integer-array>
     <string-array name="vrDpadThumbrestModeNames">
         <item>@string/vr_dpad_thumbrest_mode_both</item>
         <item>@string/vr_dpad_thumbrest_mode_left_to_right</item>

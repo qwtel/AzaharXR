@@ -2012,6 +2012,17 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
             )
             add(
                 SingleChoiceSetting(
+                    IntSetting.VR_DISPLAY_REFRESH_RATE,
+                    R.string.vr_display_refresh_rate,
+                    R.string.vr_display_refresh_rate_description,
+                    R.array.vrDisplayRefreshRateNames,
+                    R.array.vrDisplayRefreshRateValues,
+                    IntSetting.VR_DISPLAY_REFRESH_RATE.key,
+                    IntSetting.VR_DISPLAY_REFRESH_RATE.defaultValue
+                )
+            )
+            add(
+                SingleChoiceSetting(
                     IntSetting.VR_DPAD_THUMBREST_MODE,
                     R.string.vr_dpad_thumbrest_mode,
                     R.string.vr_dpad_thumbrest_mode_description,

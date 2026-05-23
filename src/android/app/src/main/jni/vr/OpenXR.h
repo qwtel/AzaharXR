@@ -55,10 +55,12 @@ public:
 
     // EGL context
     std::unique_ptr<EglContext> mEglContext;
+    bool                        mDisplayRefreshRateExtensionEnabled = false;
 
 private:
     int32_t OpenXRInit(JavaVM* const jvm, const jobject activityObject);
     int32_t XrViewConfigInit();
     int32_t XrSpaceInit();
+    void    RequestDisplayRefreshRate();
     void    XrSpaceDestroy();
 };

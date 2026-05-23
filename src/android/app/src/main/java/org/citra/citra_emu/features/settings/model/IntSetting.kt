@@ -65,6 +65,7 @@ enum class IntSetting(
         if (hMDType == VRUtils.HMDType.QUEST3.value) 1 else 2
     ),
     VR_CPU_LEVEL("vr_cpu_level", Settings.SECTION_VR, 3),
+    VR_DISPLAY_REFRESH_RATE("vr_display_refresh_rate", Settings.SECTION_VR, 0),
     VR_DPAD_THUMBREST_MODE("vr_dpad_thumbrest_mode", Settings.SECTION_VR, 0),
     VR_MOTION_SOURCE("vr_motion_source", Settings.SECTION_VR, 5),
     VR_IMMERSIVE_MODE("vr_immersive_mode", Settings.SECTION_VR, 0),
@@ -96,6 +97,7 @@ enum class IntSetting(
             INIT_CLOCK,
             GRAPHICS_API,
             AUDIO_INPUT_TYPE,
+            VR_DISPLAY_REFRESH_RATE,
         )
 
         fun from(key: String): IntSetting? = IntSetting.values().firstOrNull { it.key == key }

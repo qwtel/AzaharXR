@@ -524,6 +524,10 @@ vr_extra_performance_mode =
 # OpenXR CPU performance level. Defaults to 3 in CitraVR.
 vr_cpu_level =
 
+# Requested headset display refresh rate in Hz.
+# 0: System default, 120: Request 120 Hz
+vr_display_refresh_rate =
+
 # 0 (default): Either thumbrest turns the opposite stick into d-pad.
 # 1: Left thumbrest turns right stick into d-pad.
 vr_dpad_thumbrest_mode =

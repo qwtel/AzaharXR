@@ -14,6 +14,7 @@ License     :   Licensed under GPLv3 or any later version.
 
 #include "utils/Common.h"
 #include "utils/LogUtils.h"
+#include "vr_settings.h"
 
 #include <openxr/openxr_platform.h>
 
@@ -153,7 +154,30 @@ int XrCheckRequiredExtensions(const char* const* requiredExtensionNames,
     return 0;
 }
 
-XrInstance XrInstanceCreate() {
+bool XrIsExtensionSupported(const char* extensionName) {
+    uint32_t numOutputExtensions = 0;
+    OXR(xrEnumerateInstanceExtensionProperties(NULL, 0, &numOutputExtensions, NULL));
+
+    auto extensionProperties = std::vector<XrExtensionProperties>(numOutputExtensions);
+
+    for (auto& ext : extensionProperties) {
+        ext.type = XR_TYPE_EXTENSION_PROPERTIES;
+        ext.next = NULL;
+    }
+
+    OXR(xrEnumerateInstanceExtensionProperties(NULL, numOutputExtensions, &numOutputExtensions,
+                                               extensionProperties.data()));
+
+    for (const auto& extension : extensionProperties) {
+        if (!strcmp(extensionName, extension.extensionName)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+XrInstance XrInstanceCreate(bool& displayRefreshRateExtensionEnabled) {
     // Check that the extensions required are present.
     static const char* const requiredExtensionNames[] = {
         XR_KHR_OPENGL_ES_ENABLE_EXTENSION_NAME,
@@ -171,6 +195,19 @@ XrInstance XrInstanceCreate() {
     BAIL_ON_ERR(XrCheckRequiredExtensions(&requiredExtensionNames[0], numRequiredExtensions),
                 XR_NULL_HANDLE);
 
+    auto enabledExtensionNames =
+        std::vector<const char*>(requiredExtensionNames,
+                                 requiredExtensionNames + numRequiredExtensions);
+
+    if (XrIsExtensionSupported(XR_FB_DISPLAY_REFRESH_RATE_EXTENSION_NAME)) {
+        enabledExtensionNames.push_back(XR_FB_DISPLAY_REFRESH_RATE_EXTENSION_NAME);
+        displayRefreshRateExtensionEnabled = true;
+    } else {
+        displayRefreshRateExtensionEnabled = false;
+        ALOGI("OpenXR extension {} is not supported; using runtime default refresh rate.",
+              XR_FB_DISPLAY_REFRESH_RATE_EXTENSION_NAME);
+    }
+
     XrApplicationInfo appInfo = {};
     strcpy(appInfo.applicationName, "Citra");
     appInfo.applicationVersion = 0;
@@ -185,8 +222,8 @@ XrInstance XrInstanceCreate() {
     ici.applicationInfo       = appInfo;
     ici.enabledApiLayerCount  = 0;
     ici.enabledApiLayerNames  = NULL;
-    ici.enabledExtensionCount = numRequiredExtensions;
-    ici.enabledExtensionNames = requiredExtensionNames;
+    ici.enabledExtensionCount = static_cast<uint32_t>(enabledExtensionNames.size());
+    ici.enabledExtensionNames = enabledExtensionNames.data();
 
     XrResult   initResult;
     XrInstance instanceLocal;
@@ -428,6 +465,37 @@ int32_t OpenXr::XrSpaceInit() {
     return 0;
 }
 
+void OpenXr::RequestDisplayRefreshRate() {
+    if (VRSettings::values.display_refresh_rate_hz <= 0) {
+        ALOGI("Using OpenXR runtime default display refresh rate.");
+        return;
+    }
+
+    if (!mDisplayRefreshRateExtensionEnabled) {
+        return;
+    }
+
+    PFN_xrRequestDisplayRefreshRateFB pfnRequestDisplayRefreshRateFB = NULL;
+    OXR(xrGetInstanceProcAddr(mInstance, "xrRequestDisplayRefreshRateFB",
+                              (PFN_xrVoidFunction*)(&pfnRequestDisplayRefreshRateFB)));
+    if (pfnRequestDisplayRefreshRateFB == nullptr) {
+        ALOGE("xrRequestDisplayRefreshRateFB is unavailable.");
+        return;
+    }
+
+    const float requestedRefreshRateHz =
+        static_cast<float>(VRSettings::values.display_refresh_rate_hz);
+    const XrResult result =
+        pfnRequestDisplayRefreshRateFB(mSession, requestedRefreshRateHz);
+    if (XR_SUCCEEDED(result)) {
+        ALOGI("Requested OpenXR display refresh rate: {} Hz", requestedRefreshRateHz);
+    } else {
+        OXR_CheckErrors(result, "xrRequestDisplayRefreshRateFB", false);
+        ALOGI("OpenXR runtime rejected {} Hz; using runtime default refresh rate.",
+              requestedRefreshRateHz);
+    }
+}
+
 void OpenXr::XrSpaceDestroy() {
     if (mHeadSpace != XR_NULL_HANDLE) {
         OXR(xrDestroySpace(mHeadSpace));
@@ -454,7 +522,7 @@ int OpenXr::OpenXRInit(JavaVM* const jvm, const jobject activityObject) {
     /////////////////////////////////////
     // Create the OpenXR instance.
     /////////////////////////////////////
-    mInstance = XrInstanceCreate();
+    mInstance = XrInstanceCreate(mDisplayRefreshRateExtensionEnabled);
     if (mInstance == XR_NULL_HANDLE) {
         ALOGE("Failed to create XR instance");
         return -2;
@@ -509,6 +577,9 @@ int OpenXr::OpenXRInit(JavaVM* const jvm, const jobject activityObject) {
         ALOGE("Failed to create XR session");
         return -6;
     }
+
+    RequestDisplayRefreshRate();
+
     return 0;
 }
 

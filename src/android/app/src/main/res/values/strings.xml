@@ -879,6 +879,10 @@
     <string name="vr_licenses_description">Projects that make Citra and CitraVR possible</string>
     <string name="game_compat_tooltip">Game Compatibility Sheet</string>
     <string name="vr_extra_performance_mode_description">Overrides the value of other settings to minimize overhead and maxmimize performance.  NOTE: when this setting is enabled, the user\'s values for the following settings are ignored: VR Environment (always selects Void), Audio stretching (disabled)</string>
+    <string name="vr_display_refresh_rate">Display Refresh Rate</string>
+    <string name="vr_display_refresh_rate_description">120 Hz mode might help with frame pacing when playing 60 Hz games.</string>
+    <string name="vr_display_refresh_rate_default">System default</string>
+    <string name="vr_display_refresh_rate_120">120 Hz</string>
     <string name="vr_notice_title">Welcome to CitraVR!</string>
     <string name="vr_notice_description">During your first playthrough of a game or level, you might experience brief pauses or audio stutters. \n\nAfter the shaders are loaded, they are stored to the device, preventing these stutters on subsequent launches. </string>
     <string name="vr_notice_description2">Some games just won\'t run well. Be sure to check the CitraVR Game Compatibility List to see which games perform best.</string>
