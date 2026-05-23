@@ -50,6 +50,10 @@ constexpr static std::array<vk::DescriptorSetLayoutBinding, 1> PRESENT_BINDINGS 
     {0, vk::DescriptorType::eCombinedImageSampler, 3, vk::ShaderStageFlagBits::eFragment},
 }};
 
+void ApplyVrAtlasFlip(const float& top, const float& bottom) {
+    std::swap(const_cast<float&>(top), const_cast<float&>(bottom));
+}
+
 RendererVulkan::RendererVulkan(Core::System& system, Pica::PicaCore& pica_,
                                Frontend::EmuWindow& window, Frontend::EmuWindow* secondary_window)
     : RendererBase{system, window, secondary_window}, memory{system.Memory()}, pica{pica_},
@@ -531,6 +535,7 @@ void RendererVulkan::DrawSingleScreen(u32 screen_id, float x, float y, float w, 
                                       Layout::DisplayOrientation orientation) {
     const ScreenInfo& screen_info = screen_infos[screen_id];
     const auto& texcoords = screen_info.texcoords;
+    ApplyVrAtlasFlip(texcoords.top, texcoords.bottom);
 
     std::array<ScreenRectVertex, 4> vertices;
     switch (orientation) {
@@ -603,6 +608,7 @@ void RendererVulkan::DrawSingleScreenStereo(u32 screen_id_l, u32 screen_id_r, fl
                                             Layout::DisplayOrientation orientation) {
     const ScreenInfo& screen_info_l = screen_infos[screen_id_l];
     const auto& texcoords = screen_info_l.texcoords;
+    ApplyVrAtlasFlip(texcoords.top, texcoords.bottom);
 
     std::array<ScreenRectVertex, 4> vertices;
     switch (orientation) {

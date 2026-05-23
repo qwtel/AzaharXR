@@ -72,6 +72,10 @@ static std::array<GLfloat, 3 * 2> MakeOrthographicMatrix(const float width, cons
     return matrix;
 }
 
+void ApplyVrAtlasFlip(const float& top, const float& bottom) {
+    std::swap(const_cast<float&>(top), const_cast<float&>(bottom));
+}
+
 RendererOpenGL::RendererOpenGL(Core::System& system, Pica::PicaCore& pica_,
                                Frontend::EmuWindow& window, Frontend::EmuWindow* secondary_window)
     : VideoCore::RendererBase{system, window, secondary_window}, pica{pica_},
@@ -523,6 +527,7 @@ void RendererOpenGL::ConfigureFramebufferTexture(TextureInfo& texture,
 void RendererOpenGL::DrawSingleScreen(const ScreenInfo& screen_info, float x, float y, float w,
                                       float h, Layout::DisplayOrientation orientation) {
     const auto& texcoords = screen_info.display_texcoords;
+    ApplyVrAtlasFlip(texcoords.top, texcoords.bottom);
 
     std::array<ScreenRectVertex, 4> vertices;
     switch (orientation) {
@@ -594,6 +599,7 @@ void RendererOpenGL::DrawSingleScreenStereo(const ScreenInfo& screen_info_l,
                                             float w, float h,
                                             Layout::DisplayOrientation orientation) {
     const auto& texcoords = screen_info_l.display_texcoords;
+    ApplyVrAtlasFlip(texcoords.top, texcoords.bottom);
 
     std::array<ScreenRectVertex, 4> vertices;
     switch (orientation) {
