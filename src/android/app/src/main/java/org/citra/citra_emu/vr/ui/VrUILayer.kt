@@ -139,8 +139,6 @@ abstract class VrUILayer(
         )
         presentation = Presentation(activity.applicationContext, virtualDisplay!!.display).apply {
             window?.setType(WindowManager.LayoutParams.TYPE_PRIVATE_PRESENTATION)
-            // CitraVR keeps OpenXR layer sizes positive for current HorizonOS runtimes. Flip the
-            // Android UI content here to preserve the old negative-layer visual orientation.
             val contentView = LayoutInflater.from(context).inflate(layoutId, null, false).apply {
                 pivotY = 0f
                 scaleY = -1f

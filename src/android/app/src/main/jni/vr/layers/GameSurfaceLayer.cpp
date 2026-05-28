@@ -213,7 +213,7 @@ XrVector2f GetDensityScaleFor3dsScreen(const uint32_t screenWidth,
     const float visibleHalfWidth =
         static_cast<float>(screenWidth * resolutionFactor) / 2.0f;
     const float visibleHeight =
-        static_cast<float>(screenHeight) * static_cast<float>(resolutionFactor);
+        static_cast<float>(std::abs(screenHeight)) * static_cast<float>(resolutionFactor);
     return XrVector2f{2.0f * visibleHalfWidth / density, visibleHeight / density} *
            scaleFactor;
 }
@@ -322,7 +322,7 @@ void GameSurfaceLayer::FrameTopPanel(const XrSpace& space, std::vector<XrComposi
                                  : GameSurfaceLayer::DEFAULT_CYLINDER_CENTRAL_ANGLE_DEGREES *
                                        immersiveModeFactor) *
                 MATH_FLOAT_PI / 180.0f;
-            layer.aspectRatio = -static_cast<double>(
+            layer.aspectRatio = static_cast<double>(
                 static_cast<float>(Core::kScreenTopWidth) / Core::kScreenTopHeight);
             layers[layerCount++].mCylinder = layer;
         }
@@ -349,7 +349,7 @@ void GameSurfaceLayer::FrameTopPanel(const XrSpace& space, std::vector<XrComposi
             layer.subImage.imageArrayIndex         = 0;
             layer.pose                             = mTopPanel.mWorldFromPanel;
             const auto scale = GetDensityScaleFor3dsScreen(Core::kScreenTopWidth,
-                                                           -Core::kScreenTopHeight, 1.0f,
+                                                           Core::kScreenTopHeight, 1.0f,
                                                            mResolutionFactor);
             layer.size.width  = scale.x;
             layer.size.height = scale.y;
@@ -394,7 +394,7 @@ void GameSurfaceLayer::FrameLowerPanel(const XrSpace&                   space,
     layer.subImage.imageArrayIndex         = 0;
     layer.pose                             = mLowerPanel.mWorldFromPanel;
     const auto scale = GetDensityScaleFor3dsScreen(Core::kScreenBottomWidth,
-                                                   -Core::kScreenBottomHeight,
+                                                   Core::kScreenBottomHeight,
                                                    mLowerPanel.mScaleFactor, mResolutionFactor);
     layer.size.width  = scale.x;
     layer.size.height = scale.y;
