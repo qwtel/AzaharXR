@@ -218,7 +218,7 @@ XrVector2f GetDensityScaleForSize(const int32_t  texWidth,
                                   const uint32_t resolutionFactor) {
     const float density = GetDensitySysprop(resolutionFactor);
     return XrVector2f{2.0f * static_cast<float>(texWidth) / density,
-                      (static_cast<float>(texHeight) / density)} *
+                      (static_cast<float>(std::abs(texHeight)) / density)} *
            scaleFactor;
 }
 
@@ -327,7 +327,7 @@ void GameSurfaceLayer::FrameTopPanel(const XrSpace& space, std::vector<XrComposi
                                  : GameSurfaceLayer::DEFAULT_CYLINDER_CENTRAL_ANGLE_DEGREES *
                                        immersiveModeFactor) *
                 MATH_FLOAT_PI / 180.0f;
-            layer.aspectRatio              = -static_cast<double>(mTopPanel.AspectRatio());
+            layer.aspectRatio              = static_cast<double>(mTopPanel.AspectRatio());
             layers[layerCount++].mCylinder = layer;
         }
     } else {
@@ -356,7 +356,7 @@ void GameSurfaceLayer::FrameTopPanel(const XrSpace& space, std::vector<XrComposi
             // Scale to get the desired density within the visible area (if we
             // want).
             const auto scale  = GetDensityScaleForSize(mTopPanel.mWidth - cropHoriz,
-                                                       -mTopPanel.mHeight, 1.0f, mResolutionFactor);
+                                                       mTopPanel.mHeight, 1.0f, mResolutionFactor);
             layer.size.width  = scale.x;
             layer.size.height = scale.y;
 
@@ -401,7 +401,7 @@ void GameSurfaceLayer::FrameLowerPanel(const XrSpace&                   space,
     layer.subImage.imageRect.extent.height = mLowerPanel.mHeight / immersiveModeFactor;
     layer.subImage.imageArrayIndex         = 0;
     layer.pose                             = mLowerPanel.mWorldFromPanel;
-    const auto scale  = GetDensityScaleForSize(mLowerPanel.mWidth - cropHoriz, -mLowerPanel.mHeight,
+    const auto scale  = GetDensityScaleForSize(mLowerPanel.mWidth - cropHoriz, mLowerPanel.mHeight,
                                                mLowerPanel.mScaleFactor, mResolutionFactor);
     layer.size.width  = scale.x;
     layer.size.height = scale.y;
