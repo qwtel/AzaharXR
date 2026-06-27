@@ -36,6 +36,7 @@ class SliderViewHolder(val binding: ListItemSettingBinding, adapter: SettingsAda
            setting.setting is ScaledFloatSetting ->
                 "${(setting.setting as ScaledFloatSetting).float.toInt()}${setting.units}"
            setting.setting is FloatSetting -> "${(setting.setting as AbstractFloatSetting).float}${setting.units}"
+            setting.setting is FloatSetting -> "${(setting.setting as AbstractFloatSetting).float}${setting.units}"
             else -> "${(setting.setting as AbstractIntSetting).int}${setting.units}"
         }
 
@@ -54,7 +55,7 @@ class SliderViewHolder(val binding: ListItemSettingBinding, adapter: SettingsAda
         if (setting.isActive) {
             adapter.onSliderClick(setting, bindingAdapterPosition)
         } else {
-            adapter.onClickDisabledSetting(!setting.isEditable)
+            adapter.onClickDisabledSetting(!setting.isEditable, setting.disabledMessage)
         }
     }
 
@@ -62,7 +63,7 @@ class SliderViewHolder(val binding: ListItemSettingBinding, adapter: SettingsAda
         if (setting.isActive) {
             return adapter.onLongClick(setting.setting!!, bindingAdapterPosition)
         } else {
-            adapter.onClickDisabledSetting(!setting.isEditable)
+            adapter.onClickDisabledSetting(!setting.isEditable, setting.disabledMessage)
         }
         return false
     }

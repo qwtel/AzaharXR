@@ -7,19 +7,19 @@
 #include <cstdlib>
 #include <string>
 #include <android/native_window_jni.h>
+#include "common/android_utils.h"
 #include "common/logging/log.h"
 #include "common/settings.h"
 #include "input_common/main.h"
 #include "jni/emu_window/emu_window.h"
 #include "jni/id_cache.h"
 #include "jni/input_manager.h"
-#include "jni/util.h"
 #include "network/network.h"
 #include "video_core/renderer_base.h"
 
 bool EmuWindow_Android::OnSurfaceChanged(ANativeWindow* surface) {
-    int temp_width = surface == nullptr ? 0 : ANativeWindow_getWidth(surface);
-    int temp_height = surface == nullptr ? 0 : ANativeWindow_getHeight(surface);
+    int temp_width = (surface == nullptr) ? 0 : ANativeWindow_getWidth(surface);
+    int temp_height = (surface == nullptr) ? 0 : ANativeWindow_getHeight(surface);
     if (render_window == surface && temp_width == window_width && temp_height == window_height) {
         return false;
     }
@@ -47,8 +47,7 @@ void EmuWindow_Android::OnTouchMoved(int x, int y) {
 }
 
 void EmuWindow_Android::OnFramebufferSizeChanged() {
-    const bool is_portrait_mode = IsPortraitMode() && !is_secondary;
-
+    const bool is_portrait_mode = (AndroidUtils::IsPortraitMode() && !is_secondary);
     UpdateCurrentFramebufferLayout(window_width, window_height, is_portrait_mode);
 }
 

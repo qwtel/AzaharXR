@@ -40,6 +40,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.get
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.drawerlayout.widget.DrawerLayout.DrawerListener
 import androidx.fragment.app.Fragment
@@ -77,16 +78,19 @@ import org.citra.citra_emu.model.Game
 import org.citra.citra_emu.utils.BuildUtil
 import org.citra.citra_emu.utils.DirectoryInitialization
 import org.citra.citra_emu.utils.DirectoryInitialization.DirectoryInitializationState
+import org.citra.citra_emu.utils.EmulationLifecycleUtil
 import org.citra.citra_emu.utils.EmulationMenuSettings
 import org.citra.citra_emu.utils.GameHelper
 import org.citra.citra_emu.utils.GameIconUtils
-import org.citra.citra_emu.utils.EmulationLifecycleUtil
 import org.citra.citra_emu.utils.Log
 import org.citra.citra_emu.utils.ViewUtils
 import org.citra.citra_emu.viewmodel.EmulationViewModel
 import org.citra.citra_emu.vr.utils.VRUtils
 
-class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.FrameCallback {
+class EmulationFragment :
+    Fragment(),
+    SurfaceHolder.Callback,
+    Choreographer.FrameCallback {
     private val preferences: SharedPreferences
         get() = PreferenceManager.getDefaultSharedPreferences(CitraApplication.appContext)
 
@@ -117,7 +121,7 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is EmulationActivity) {
-             NativeLibrary.setEmulationActivity(context)
+            NativeLibrary.setEmulationActivity(context)
         } else {
             throw IllegalStateException("EmulationFragment must have EmulationActivity parent")
         }
@@ -145,10 +149,16 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
             if (!BuildUtil.isGooglePlayBuild) {
                 val intentUriString = intentUri.toString()
                 // We need to build a special path as the incoming URI may be SAF exclusive
-                Log.warning("[EmulationFragment] Cannot determine native path of URI \"" +
-                            intentUriString + "\", using file descriptor instead.")
+                Log.warning(
+                    "[EmulationFragment] Cannot determine native path of URI \"" +
+                        intentUriString + "\", using file descriptor instead."
+                )
                 if (!intentUriString.startsWith("!")) {
-                    gameFd = requireContext().contentResolver.openFileDescriptor(intentUri, "r")?.detachFd()
+                    gameFd =
+                        requireContext().contentResolver.openFileDescriptor(
+                            intentUri,
+                            "r"
+                        )?.detachFd()
                     intentUri = if (gameFd != null) {
                         Uri.parse("fd://" + gameFd.toString())
                     } else {
@@ -159,7 +169,12 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
             intentGame =
                 intentUri?.let {
                     // isInstalled, addedToLibrary and mediaType do not matter here
-                    GameHelper.getGame(it, isInstalled = false, addedToLibrary = false, mediaType = Game.MediaType.GAME_CARD)
+                    GameHelper.getGame(
+                        it,
+                        isInstalled = false,
+                        addedToLibrary = false,
+                        mediaType = Game.MediaType.GAME_CARD
+                    )
                 }
         }
 
@@ -199,10 +214,10 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
             emulationActivity.secondaryDisplayManager.availableDisplays.isNotEmpty()
         binding.inGameMenu.menu.findItem(R.id.menu_landscape_screen_layout).isVisible =
             CitraApplication.appContext.resources.configuration.orientation !=
-                    Configuration.ORIENTATION_PORTRAIT
+            Configuration.ORIENTATION_PORTRAIT
         binding.inGameMenu.menu.findItem(R.id.menu_portrait_screen_layout).isVisible =
             CitraApplication.appContext.resources.configuration.orientation ==
-                    Configuration.ORIENTATION_PORTRAIT
+            Configuration.ORIENTATION_PORTRAIT
         return binding.root
     }
 
@@ -493,7 +508,9 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
                             ViewUtils.showView(binding.surfaceInputOverlay)
                             binding.inGameMenu.menu.findItem(R.id.menu_emulation_savestates)
                                 .setVisible(NativeLibrary.getSavestateInfo() != null)
-                            binding.drawerLayout.setDrawerLockMode(EmulationMenuSettings.drawerLockMode)
+                            binding.drawerLayout.setDrawerLockMode(
+                                EmulationMenuSettings.drawerLockMode
+                            )
                         }
                     }
                 }
@@ -508,9 +525,7 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
         emulationState?.newSurface(surface, VRUtils.isVR(emulationActivity))
     }
 
-    fun isDrawerOpen(): Boolean {
-        return binding.drawerLayout.isOpen
-    }
+    fun isDrawerOpen(): Boolean = binding.drawerLayout.isOpen
 
     private fun togglePause() {
         emulationState?.let { emulationState ->
@@ -623,7 +638,6 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
     }
 
     private fun showStateSubmenu(isSaving: Boolean) {
-
         val savestates = NativeLibrary.getSavestateInfo()
 
         val popupMenu = PopupMenu(
@@ -664,13 +678,13 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
         }
 
         savestates?.forEach {
-            var enableClick = true
-            val text = if (it.slot == NativeLibrary.QUICKSAVE_SLOT) {
-                getString(R.string.emulation_occupied_quicksave_slot, it.time)
+            var text: String
+            if (it.slot == NativeLibrary.QUICKSAVE_SLOT) {
+                text = getString(R.string.emulation_occupied_quicksave_slot, it.time)
             } else {
-                getString(R.string.emulation_occupied_state_slot, it.slot, it.time)
+                text = getString(R.string.emulation_occupied_state_slot, it.slot, it.time)
             }
-            popupMenu.menu.getItem(it.slot).setTitle(text).setEnabled(enableClick)
+            popupMenu.menu.getItem(it.slot).setTitle(text).setEnabled(true)
         }
 
         popupMenu.show()
@@ -697,7 +711,7 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
 
         savestates?.forEach {
             val text = getString(R.string.emulation_occupied_state_slot, it.slot, it.time)
-            popupMenu.menu.getItem(it.slot - 1).setTitle(text).setEnabled(true)
+            popupMenu.menu[it.slot - 1].setTitle(text).setEnabled(true)
         }
 
         popupMenu.show()
@@ -1034,7 +1048,6 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
 
             else ->
                 R.id.menu_portrait_layout_top_full
-
         }
 
         popupMenu.menu.findItem(layoutOptionMenuItem).setChecked(true)
@@ -1042,12 +1055,16 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
         popupMenu.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.menu_portrait_layout_top_full -> {
-                    screenAdjustmentUtil.changePortraitOrientation(PortraitScreenLayout.TOP_FULL_WIDTH.int)
+                    screenAdjustmentUtil.changePortraitOrientation(
+                        PortraitScreenLayout.TOP_FULL_WIDTH.int
+                    )
                     true
                 }
 
                 R.id.menu_portrait_layout_original -> {
-                    screenAdjustmentUtil.changePortraitOrientation(PortraitScreenLayout.ORIGINAL.int)
+                    screenAdjustmentUtil.changePortraitOrientation(
+                        PortraitScreenLayout.ORIGINAL.int
+                    )
                     true
                 }
 
@@ -1057,7 +1074,9 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
                         R.string.emulation_adjust_custom_layout,
                         Toast.LENGTH_LONG
                     ).show()
-                    screenAdjustmentUtil.changePortraitOrientation(PortraitScreenLayout.CUSTOM_PORTRAIT_LAYOUT.int)
+                    screenAdjustmentUtil.changePortraitOrientation(
+                        PortraitScreenLayout.CUSTOM_PORTRAIT_LAYOUT.int
+                    )
                     true
                 }
 
@@ -1082,12 +1101,13 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
         val displays =
             emulationActivity.secondaryDisplayManager.availableDisplays
 
-        if (selectedLayout == SecondaryDisplayLayout.NONE.int || !BooleanSetting.ENABLE_SECONDARY_DISPLAY.boolean) {
+        if (selectedLayout == SecondaryDisplayLayout.NONE.int ||
+            !BooleanSetting.ENABLE_SECONDARY_DISPLAY.boolean
+        ) {
             BooleanSetting.ENABLE_SECONDARY_DISPLAY.boolean = false
             enableSecondaryCheckbox.isChecked = false
             chooserMenu.isVisible = false
             popupMenu.menu.setGroupEnabled(R.id.menu_secondary_layout_group, false)
-
         } else {
             popupMenu.menu.setGroupEnabled(R.id.menu_secondary_layout_group, true)
             chooserMenu.isVisible = (displays.size > 1)
@@ -1155,37 +1175,51 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
                 }
 
                 R.id.menu_secondary_layout_opposite -> {
-                    screenAdjustmentUtil.changeSecondaryOrientation(SecondaryDisplayLayout.REVERSE_PRIMARY.int)
+                    screenAdjustmentUtil.changeSecondaryOrientation(
+                        SecondaryDisplayLayout.REVERSE_PRIMARY.int
+                    )
                     true
                 }
 
                 R.id.menu_secondary_layout_top -> {
-                    screenAdjustmentUtil.changeSecondaryOrientation(SecondaryDisplayLayout.TOP_SCREEN.int)
+                    screenAdjustmentUtil.changeSecondaryOrientation(
+                        SecondaryDisplayLayout.TOP_SCREEN.int
+                    )
                     true
                 }
 
                 R.id.menu_secondary_layout_bottom -> {
-                    screenAdjustmentUtil.changeSecondaryOrientation(SecondaryDisplayLayout.BOTTOM_SCREEN.int)
+                    screenAdjustmentUtil.changeSecondaryOrientation(
+                        SecondaryDisplayLayout.BOTTOM_SCREEN.int
+                    )
                     true
                 }
 
                 R.id.menu_secondary_layout_side_by_side -> {
-                    screenAdjustmentUtil.changeSecondaryOrientation(SecondaryDisplayLayout.SIDE_BY_SIDE.int)
+                    screenAdjustmentUtil.changeSecondaryOrientation(
+                        SecondaryDisplayLayout.SIDE_BY_SIDE.int
+                    )
                     true
                 }
 
                 R.id.menu_secondary_layout_hybrid -> {
-                    screenAdjustmentUtil.changeSecondaryOrientation(SecondaryDisplayLayout.HYBRID.int)
+                    screenAdjustmentUtil.changeSecondaryOrientation(
+                        SecondaryDisplayLayout.HYBRID.int
+                    )
                     true
                 }
 
                 R.id.menu_secondary_layout_original -> {
-                    screenAdjustmentUtil.changeSecondaryOrientation(SecondaryDisplayLayout.ORIGINAL.int)
+                    screenAdjustmentUtil.changeSecondaryOrientation(
+                        SecondaryDisplayLayout.ORIGINAL.int
+                    )
                     true
                 }
 
                 R.id.menu_secondary_layout_largescreen -> {
-                    screenAdjustmentUtil.changeSecondaryOrientation(SecondaryDisplayLayout.LARGE_SCREEN.int)
+                    screenAdjustmentUtil.changeSecondaryOrientation(
+                        SecondaryDisplayLayout.LARGE_SCREEN.int
+                    )
                     true
                 }
 
@@ -1233,7 +1267,8 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
         val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.emulation_toggle_controls)
             .setMultiChoiceItems(
-                R.array.n3dsButtons, enabledButtons
+                R.array.n3dsButtons,
+                enabledButtons
             ) { _: DialogInterface?, indexSelected: Int, isChecked: Boolean ->
                 editor.putBoolean("buttonToggle$indexSelected", isChecked)
             }
@@ -1278,14 +1313,18 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             })
             slider.addOnChangeListener(
-                Slider.OnChangeListener { slider: Slider, progress: Float, _: Boolean ->
+                Slider.OnChangeListener {
+                        slider: Slider,
+                        progress: Float,
+                        _: Boolean
+                    ->
                     if (textValue.text.toString() != (slider.value + 50).toInt().toString()) {
                         textValue.setText((slider.value + 50).toInt().toString())
                         textValue.setSelection(textValue.length())
                         setControlScale(slider.value.toInt(), target)
                     }
-
-                })
+                }
+            )
             textInput.suffixText = "%"
         }
         val previousProgress = sliderBinding.slider.value.toInt()
@@ -1328,7 +1367,6 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             })
-
 
             slider.addOnChangeListener { _: Slider, value: Float, _: Boolean ->
 
@@ -1434,22 +1472,23 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
         }
 
         if (BooleanSetting.PERF_OVERLAY_ENABLE.boolean) {
-            val SYSTEM_FPS = 0
-            val FPS = 1
-            val SPEED = 2
-            val FRAMETIME = 3
-            val TIME_SVC = 4
-            val TIME_IPC = 5
-            val TIME_GPU = 6
-            val TIME_SWAP = 7
-            val TIME_REM = 8
+            @Suppress("UnusedVariable")
+            val systemFps = 0
+            val fps = 1
+            val speed = 2
+            val frametime = 3
+            val timeSvc = 4
+            val timeIpc = 5
+            val timeGpu = 6
+            val timeSwap = 7
+            val timeRem = 8
             perfStatsUpdater = Runnable {
                 val sb = StringBuilder()
                 val perfStats = NativeLibrary.getPerfStats()
                 val dividerString = "\u00A0\u2502 "
-                if (perfStats[FPS] > 0) {
+                if (perfStats[fps] > 0) {
                     if (BooleanSetting.PERF_OVERLAY_SHOW_FPS.boolean) {
-                        sb.append(String.format("FPS:\u00A0%d", (perfStats[FPS] + 0.5).toInt()))
+                        sb.append(String.format("FPS:\u00A0%d", (perfStats[fps] + 0.5).toInt()))
                     }
 
                     if (BooleanSetting.PERF_OVERLAY_SHOW_FRAMETIME.boolean) {
@@ -1457,12 +1496,12 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
                         sb.append(
                             String.format(
                                 "Frame:\u00A0%.1fms (GPU: [CMD:\u00A0%.1fms SWP:\u00A0%.1fms] IPC:\u00A0%.1fms SVC:\u00A0%.1fms Rem:\u00A0%.1fms)",
-                                (perfStats[FRAMETIME] * 1000.0f).toFloat(),
-                                (perfStats[TIME_GPU] * 1000.0f).toFloat(),
-                                (perfStats[TIME_SWAP] * 1000.0f).toFloat(),
-                                (perfStats[TIME_IPC] * 1000.0f).toFloat(),
-                                (perfStats[TIME_SVC] * 1000.0f).toFloat(),
-                                (perfStats[TIME_REM] * 1000.0f).toFloat(),
+                                (perfStats[frametime] * 1000.0f).toFloat(),
+                                (perfStats[timeGpu] * 1000.0f).toFloat(),
+                                (perfStats[timeSwap] * 1000.0f).toFloat(),
+                                (perfStats[timeIpc] * 1000.0f).toFloat(),
+                                (perfStats[timeSvc] * 1000.0f).toFloat(),
+                                (perfStats[timeRem] * 1000.0f).toFloat()
                             )
                         )
                     }
@@ -1472,7 +1511,7 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
                         sb.append(
                             String.format(
                                 "Speed:\u00A0%d%%",
-                                (perfStats[SPEED] * 100.0 + 0.5).toInt()
+                                (perfStats[speed] * 100.0 + 0.5).toInt()
                             )
                         )
                     }
@@ -1480,7 +1519,8 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
                     if (BooleanSetting.PERF_OVERLAY_SHOW_APP_RAM_USAGE.boolean) {
                         if (sb.isNotEmpty()) sb.append(dividerString)
                         val appRamUsage =
-                            File("/proc/self/statm").readLines()[0].split(' ')[1].toLong() * 4096 / 1000000
+                            File("/proc/self/statm").readLines()[0].split(' ')[1].toLong() * 4096 /
+                                1000000
                         sb.append("Process\u00A0RAM:\u00A0$appRamUsage\u00A0MB")
                     }
 
@@ -1505,7 +1545,9 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
                     }
 
                     if (BooleanSetting.PERF_OVERLAY_BACKGROUND.boolean) {
-                        binding.performanceOverlayShowText.setBackgroundResource(R.color.citra_transparent_black)
+                        binding.performanceOverlayShowText.setBackgroundResource(
+                            R.color.citra_transparent_black
+                        )
                     } else {
                         binding.performanceOverlayShowText.setBackgroundResource(0)
                     }
@@ -1569,10 +1611,7 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
         }
     }
 
-    private fun celsiusToFahrenheit(celsius: Float): Float {
-        return (celsius * 9 / 5) + 32
-    }
-
+    private fun celsiusToFahrenheit(celsius: Float): Float = (celsius * 9 / 5) + 32
 
     override fun surfaceCreated(holder: SurfaceHolder) {
         // We purposely don't do anything here.
