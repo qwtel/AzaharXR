@@ -19,6 +19,7 @@ import org.citra.citra_emu.features.settings.model.IntSetting
 import org.citra.citra_emu.NativeLibrary
 import org.citra.citra_emu.features.settings.model.BooleanSetting
 import org.citra.citra_emu.utils.Log
+import org.citra.citra_emu.vr.VrActivity
 
 class SecondaryDisplay(val context: Context) : DisplayManager.DisplayListener {
     private var pres: SecondaryDisplayPresentation? = null
@@ -28,7 +29,10 @@ class SecondaryDisplay(val context: Context) : DisplayManager.DisplayListener {
     var currentDisplayId = -1
 
     val availableDisplays: List<Display>
-        get() = getSecondaryDisplays()
+        get() = if (isVrContext) emptyList() else getSecondaryDisplays()
+
+    private val isVrContext: Boolean
+        get() = context is VrActivity
 
     init {
         vd = displayManager.createVirtualDisplay(
@@ -81,6 +85,12 @@ class SecondaryDisplay(val context: Context) : DisplayManager.DisplayListener {
     fun updateDisplay() {
         // return early if the parent context is dead or dying
         if (context is android.app.Activity && (context.isFinishing || context.isDestroyed)) {
+            return
+        }
+
+        if (isVrContext) {
+            currentDisplayId = -1
+            releasePresentation()
             return
         }
 

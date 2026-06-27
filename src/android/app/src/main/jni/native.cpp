@@ -199,15 +199,19 @@ static Core::System::ResultStatus RunCitra(const std::string& filepath) {
     case Settings::GraphicsAPI::OpenGL:
         window = std::make_unique<EmuWindow_Android_OpenGL>(system, s_surface, false);
         shared_context = window->GetEGLContext();
-        secondary_window = std::make_unique<EmuWindow_Android_OpenGL>(system, s_secondary_surface,
-                                                                      true, shared_context);
+        if (s_secondary_surface) {
+            secondary_window = std::make_unique<EmuWindow_Android_OpenGL>(
+                system, s_secondary_surface, true, shared_context);
+        }
         break;
 #endif
 #ifdef ENABLE_VULKAN
     case Settings::GraphicsAPI::Vulkan:
         window = std::make_unique<EmuWindow_Android_Vulkan>(s_surface, vulkan_library, false);
-        secondary_window =
-            std::make_unique<EmuWindow_Android_Vulkan>(s_secondary_surface, vulkan_library, true);
+        if (s_secondary_surface) {
+            secondary_window =
+                std::make_unique<EmuWindow_Android_Vulkan>(s_secondary_surface, vulkan_library, true);
+        }
         break;
 #endif
     default:
@@ -217,13 +221,17 @@ static Core::System::ResultStatus RunCitra(const std::string& filepath) {
 #ifdef ENABLE_OPENGL
         window = std::make_unique<EmuWindow_Android_OpenGL>(system, s_surface, false);
         shared_context = window->GetEGLContext();
-        secondary_window = std::make_unique<EmuWindow_Android_OpenGL>(system, s_secondary_surface,
-                                                                      true, shared_context);
+        if (s_secondary_surface) {
+            secondary_window = std::make_unique<EmuWindow_Android_OpenGL>(
+                system, s_secondary_surface, true, shared_context);
+        }
 
 #elif ENABLE_VULKAN
         window = std::make_unique<EmuWindow_Android_Vulkan>(s_surface, vulkan_library, false);
-        secondary_window =
-            std::make_unique<EmuWindow_Android_Vulkan>(s_secondary_surface, vulkan_library, true);
+        if (s_secondary_surface) {
+            secondary_window =
+                std::make_unique<EmuWindow_Android_Vulkan>(s_secondary_surface, vulkan_library, true);
+        }
 #else
         // TODO: Add a null renderer backend for this, perhaps.
 #error "At least one renderer must be enabled."
