@@ -66,7 +66,7 @@
 	url = https://github.com/septag/dds-ktx
 [submodule "openal-soft"]
 	path = externals/openal-soft
-	url = https://github.com/kcat/openal-soft
+    url = https://github.com/azahar-emu/openal-soft
 [submodule "glslang"]
 	path = externals/glslang
 	url = https://github.com/KhronosGroup/glslang
@@ -109,3 +109,6 @@
 [submodule "externals/openxr-sdk-src"]
 	path = externals/openxr-sdk-src
 	url = https://github.com/KhronosGroup/OpenXR-SDK-Source
+[submodule "dllwalker"]
+    path = externals/dllwalker
+    url = https://github.com/azahar-emu/dllwalker

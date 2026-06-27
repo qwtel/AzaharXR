@@ -191,7 +191,6 @@
     <string name="preferences_debug">Отладка</string>
     <string name="preferences_theme">Тема и цвет</string>
     <string name="loader_error_encrypted">Образ зашифрован</string>
-    <string name="loader_error_invalid_format">Неправильный формат образа</string>
     <string name="loader_error_file_not_found">Файл образа не существует</string>
     <string name="no_game_present">Отсутствует игра для загрузки!</string>
     <string name="emulation_menu_help">Нажмите назад для вызова меню.</string>

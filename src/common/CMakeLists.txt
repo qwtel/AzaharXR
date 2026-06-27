@@ -59,6 +59,7 @@ add_library(citra_common STATIC EXCLUDE_FROM_ALL
     microprofile.cpp
     microprofile.h
     microprofileui.h
+    optional_helper.h
     param_package.cpp
     param_package.h
     play_time_manager.cpp
