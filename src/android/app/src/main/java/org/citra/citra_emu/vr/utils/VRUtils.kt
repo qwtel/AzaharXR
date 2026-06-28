@@ -2,6 +2,7 @@ package org.citra.citra_emu.vr.utils
 
 import android.app.Activity
 import android.view.KeyEvent
+import android.view.MotionEvent
 import org.citra.citra_emu.NativeLibrary
 import org.citra.citra_emu.R
 import org.citra.citra_emu.features.settings.model.Settings
@@ -64,6 +65,8 @@ object VRUtils {
   @JvmStatic
   fun getDefaultAxisMapping(androidAxis: Int): Int {
     return when (androidAxis) {
+      MotionEvent.AXIS_HAT_X -> NativeLibrary.ButtonType.DPAD
+      MotionEvent.AXIS_HAT_Y -> NativeLibrary.ButtonType.DPAD
       14 -> NativeLibrary.ButtonType.STICK_C
       11 -> NativeLibrary.ButtonType.STICK_C
       1 -> NativeLibrary.ButtonType.STICK_LEFT
@@ -75,6 +78,8 @@ object VRUtils {
   @JvmStatic
   fun getDefaultOrientationMapping(androidAxis: Int): Int {
     return when (androidAxis) {
+      MotionEvent.AXIS_HAT_X -> 0
+      MotionEvent.AXIS_HAT_Y -> 1
       14 -> 1
       11 -> 0
       1 -> 1
