@@ -1,6 +1,6 @@
 package org.citra.citra_emu.vr.utils
 
-/** Represents a release version of Citra VR.
+/** Represents a release version of AzaharXR.
  * These version codes started being used in v0.4.0.
  **/
 open class VrReleaseVersion(version: String) {

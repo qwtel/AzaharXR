@@ -1017,7 +1017,7 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
             )
 
             add(HeaderSetting(R.string.stereoscopy))
-            // CitraVR-specific: always want this on
+            // AzaharXR-specific: always want this on
           /*  add(
                 SingleChoiceSetting(
                     IntSetting.RENDER_3D_WHICH_DISPLAY,
@@ -1076,7 +1076,7 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                 )
             )
 
-            // CitraVR-specific: don't show cardboard settings, we won't use them.
+            // AzaharXR-specific: don't show cardboard settings, we won't use them.
             /*
             add(HeaderSetting(R.string.cardboard_vr))
             add(

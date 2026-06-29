@@ -99,6 +99,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:indeterminate="true"
+                        app:indicatorColor="@color/vr_azahar_center_dark"
+                        app:trackColor="@color/vr_loading_track"
                         app:trackCornerRadius="8dp" />
 
                     <com.google.android.material.textview.MaterialTextView

@@ -223,7 +223,7 @@ class Settings {
             R.string.turbo_limit_hotkey
         )
 
-        // CitraVR uses a separate first-launch preference so users migrating from flat Citra
+        // AzaharXR uses a separate first-launch preference so users migrating from flat Citra
         // still see the VR-specific setup flow.
         const val PREF_FIRST_APP_LAUNCH = "VR_FirstApplicationLaunch"
         const val PREF_MATERIAL_YOU = "MaterialYouTheme"

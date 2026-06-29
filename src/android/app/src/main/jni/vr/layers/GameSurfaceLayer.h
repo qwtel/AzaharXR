@@ -228,7 +228,7 @@ private:
     //
     // Rendering a higher-resolution image would likely require
     // performance optimizations to avoid maxing out the GPU, e.g.:
-    //   - Multiview (requires a merged Citra/CitraVR renderer)
+    //   - Multiview (requires a merged Citra/AzaharXR renderer)
     //   - Rendering the top-screen and bottom screen separately.
     const uint32_t mImmersiveMode;
 

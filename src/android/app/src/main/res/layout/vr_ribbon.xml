@@ -26,7 +26,7 @@
             android:layout_width="1300dp"
             android:layout_height="wrap_content"
             android:background="@drawable/vr_menu_background"
-            android:backgroundTint="#0C1A27"
+            android:backgroundTint="@color/vr_panel_background"
             android:padding="50dp"
             android:clickable="true"
             android:focusable="true"
@@ -50,7 +50,7 @@
                     android:text="@string/vr_ribbon_menus_text_label"
                     android:textAlignment="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textColor="@color/citra_onPrimary"
+                    android:textColor="@color/vr_panel_text"
                     android:textSize="24sp" />
 
                 <RadioGroup

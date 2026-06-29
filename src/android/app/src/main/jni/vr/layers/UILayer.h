@@ -29,7 +29,7 @@ Content     :   Utility class for creating interactive Android UI windows that
                 use another technique.
 
                 (note: if rendering expensive UIs for occasional use is ever necessary, note that,
-                because CitraVR is made of compositor layers on top of a compositor-rendered
+                because AzaharXR is made of compositor layers on top of a compositor-rendered
                 background, there is 0 risk of juddering due to missed frame updates. Therefore,
                 you can get awaay with something most VR apps cannot: you can miss a bunch of
                 frames in order to do an expensive one-time operation on the render thread in the

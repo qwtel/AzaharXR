@@ -134,7 +134,7 @@ abstract class VrUILayer(
         // Create a virtual display based on the exact dimensions needed for the view
         val displayManager = activity.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
         virtualDisplay = displayManager.createVirtualDisplay(
-            "CitraVR", widthDp, heightDp, requestedDensity.toInt(), surface,
+            "AzaharXR", widthDp, heightDp, requestedDensity.toInt(), surface,
             DisplayManager.VIRTUAL_DISPLAY_FLAG_PRESENTATION
         )
         presentation = Presentation(activity.applicationContext, virtualDisplay!!.display).apply {

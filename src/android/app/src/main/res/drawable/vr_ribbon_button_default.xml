@@ -1,7 +1,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="#A0FFFFFF" />
+            <solid android:color="@color/vr_panel_button_outer" />
             <corners android:radius="8dp" />
         </shape>
     </item>
@@ -11,8 +11,8 @@
         <shape android:shape="rectangle">
             <gradient
                 android:angle="270"
-                android:endColor="#80607D8B"
-                android:startColor="#B3607D8B" />
+                android:endColor="@color/vr_panel_button_end"
+                android:startColor="@color/vr_panel_button_start" />
             <corners android:radius="6dp" />
         </shape>
     </item>

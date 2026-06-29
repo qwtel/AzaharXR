@@ -10,7 +10,7 @@
         android:layout_width="104dp"
         android:layout_height="104dp"
         android:layout_marginTop="20dp"
-        android:src="@drawable/ic_citra_full"
+        android:src="@drawable/azahar_flower_logo"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -24,20 +24,23 @@
         android:fontFamily="@font/lato_bold"
         android:gravity="center"
         android:text="Azahar"
-        android:textColor="@color/citra_primary"
+        android:textColor="@color/vr_azahar_ink"
         android:textSize="54sp"
+        android:translationY="4dp"
         app:layout_constraintBottom_toBottomOf="@+id/image_logo"
         app:layout_constraintStart_toEndOf="@+id/image_logo" />
 
     <TextView
-        android:id="@+id/vrTextView"
+        android:id="@+id/xrTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:fontFamily="@font/dancing_script_bold"
-        android:text="VR"
-        android:textColor="@color/citra_primary"
-        android:textSize="54sp"
+        android:text="XR"
+        android:textColor="@color/vr_azahar_center_dark"
+        android:textSize="64sp"
+        android:translationX="-6dp"
+        android:translationY="-12dp"
         app:layout_constraintBottom_toBottomOf="@+id/materialTextView"
         app:layout_constraintStart_toEndOf="@+id/materialTextView" />
 
@@ -50,7 +53,8 @@
         android:gravity="center"
         android:text="(Beta)"
         android:textSize="32sp"
+        android:translationY="4dp"
         app:layout_constraintBottom_toBottomOf="@+id/materialTextView"
-        app:layout_constraintStart_toEndOf="@+id/vrTextView" />
+        app:layout_constraintStart_toEndOf="@+id/xrTextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

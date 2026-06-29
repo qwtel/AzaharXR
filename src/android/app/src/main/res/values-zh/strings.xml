@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_disclaimer">此软件可以运行任天堂 3DS 掌机游戏。本软件不包含任何游戏。\n\n在开始前，请选择一个文件夹来存储 CitraVR 用户数据。\n\n了解更多：\n<a href="https://github.com/citra-emu/citra/wiki/CitraVR-Android-user-data-and-storage">WiKi - Android 版 CitraVR 的用户数据及存储</a>
+    <string name="app_disclaimer">此软件可以运行任天堂 3DS 掌机游戏。本软件不包含任何游戏。\n\n在开始前，请选择一个文件夹来存储 AzaharXR 用户数据。\n\n了解更多：\n<a href="https://github.com/citra-emu/citra/wiki/CitraVR-Android-user-data-and-storage">WiKi - Android 版 AzaharXR 的用户数据及存储</a>
     </string>
-    <string name="app_notification_channel_description">CitraVR 3DS 模拟器</string>
-    <string name="app_notification_running">CitraVR 正在运行</string>
-    <string name="app_game_install_description">接下来，您需要选择一个游戏目录。CitraVR 将显示所选目录中的所有 3DS ROM。\n\nCIA 格式的 ROM、游戏更新和 DLC 需要分别进行安装，具体为点击文件夹图标并选择“安装 CIA”。</string>
+    <string name="app_notification_channel_description">AzaharXR 3DS 模拟器</string>
+    <string name="app_notification_running">AzaharXR 正在运行</string>
+    <string name="app_game_install_description">接下来，您需要选择一个游戏目录。AzaharXR 将显示所选目录中的所有 3DS ROM。\n\nCIA 格式的 ROM、游戏更新和 DLC 需要分别进行安装，具体为点击文件夹图标并选择“安装 CIA”。</string>
     <string name="grid_menu_core_settings">设置</string>
     <string name="home_options">选项</string>
     <string name="home_search">搜索</string>
@@ -13,7 +13,7 @@
     <string name="install_game_content">安装 CIA 文件</string>
     <string name="install_game_content_description">安装游戏、游戏更新及 DLC</string>
     <string name="share_log">分享日志文件</string>
-    <string name="share_log_description">共享 CitraVR 的日志文件以进行调试</string>
+    <string name="share_log_description">共享 AzaharXR 的日志文件以进行调试</string>
     <string name="gpu_driver_manager">GPU 驱动管理器</string>
     <string name="install_gpu_driver">安装 GPU 驱动</string>
     <string name="install_gpu_driver_description">安装替代的驱动以获得更好的性能及画面精度</string>
@@ -22,12 +22,12 @@
     <string name="custom_driver_not_supported_description">此设备暂不支持自定义驱动。\n请之后再来查看您的设备是否已被支持。</string>
     <string name="share_log_not_found">未找到日志文件</string>
     <string name="select_games_folder">选择游戏文件夹</string>
-    <string name="select_games_folder_description">允许 CitraVR 填充游戏列表</string>
+    <string name="select_games_folder_description">允许 AzaharXR 填充游戏列表</string>
     <string name="about">关于</string>
     <string name="citra_description">一款开源的任天堂 3DS 模拟器</string>
     <string name="about_description">构建版本、贡献者以及更多</string>
     <string name="games_dir_selected">已选择游戏文件夹</string>
-    <string name="select_citra_user_folder_home_description">更改 CitraVR 用于加载游戏的相关文件</string>
+    <string name="select_citra_user_folder_home_description">更改 AzaharXR 用于加载游戏的相关文件</string>
     <string name="theme_and_color_description">更改应用程序的外观</string>
     <string name="install_cia_title">安装 CIA</string>
     <string name="select_gpu_driver">选择 GPU 驱动</string>
@@ -41,16 +41,16 @@
     <string name="installing_driver">正在安装驱动...</string>
     <string name="copied_to_clipboard">已复制到剪贴板</string>
     <string name="contributors">贡献者</string>
-    <string name="contributors_description">CitraVR 团队的用 \u2764 打造</string>
+    <string name="contributors_description">AzaharXR 团队的用 \u2764 打造</string>
     <string name="contributors_link">https://github.com/citra-emu/citra/graphs/contributors</string>
-    <string name="licenses_description">CitraVR 安卓版的诞生离不开这些项目</string>
+    <string name="licenses_description">AzaharXR 安卓版的诞生离不开这些项目</string>
     <string name="build">构建版本</string>
     <string name="licenses">许可证</string>
     <string name="support_link">https://discord.gg/FAXfZV9</string>
     <string name="website_link">https://citra-emu.org/</string>
     <string name="github_link">https://github.com/citra-emu</string>
     <string name="welcome">欢迎！</string>
-    <string name="welcome_description">了解如何设置 &lt;b&gt;CitraVR&lt;/b&gt; 并进行模拟。</string>
+    <string name="welcome_description">了解如何设置 &lt;b&gt;AzaharXR&lt;/b&gt; 并进行模拟。</string>
     <string name="get_started">开始</string>
     <string name="step_complete">完成！</string>
     <string name="games">游戏</string>
@@ -63,7 +63,7 @@
     <string name="notifications_description">点击下面的按钮授予通知权限。</string>
     <string name="give_permission">授予权限</string>
     <string name="notification_warning">跳过通知权限授予？</string>
-    <string name="notification_warning_description">CitraVR 将无法通知您重要信息。</string>
+    <string name="notification_warning_description">AzaharXR 将无法通知您重要信息。</string>
     <string name="camera_permission">摄像头</string>
     <string name="camera_permission_description">在下方授予访问相机权限以模拟 3DS 的摄像头</string>
     <string name="microphone_permission">麦克风</string>
@@ -79,7 +79,7 @@
     <string name="select_citra_user_folder_description">使用下方按钮选择您的&lt;a href=\"https://github.com/citra-emu/citra/wiki/CitraVR-Android-user-data-and-storage\"&gt;用户数据&lt;/a&gt;文件夹。</string>
     <string name="select">选择</string>
     <string name="cannot_skip">此步骤不可跳过</string>
-    <string name="cannot_skip_directory_description">运行 CitraVR 的必需步骤。请选择一个文件夹，然后才可继续。</string>
+    <string name="cannot_skip_directory_description">运行 AzaharXR 的必需步骤。请选择一个文件夹，然后才可继续。</string>
     <string name="cannot_skip_directory_help">https://github.com/citra-emu/citra/wiki/CitraVR-Android-user-data-and-storage</string>
     <string name="search_and_filter_games">搜索和游戏过滤器</string>
     <string name="home_search_games">搜索游戏</string>
@@ -279,9 +279,9 @@
     <string name="resume_emulation">继续模拟</string>
     <string name="lock_drawer">锁定侧滑菜单</string>
     <string name="unlock_drawer">解锁侧滑菜单</string>
-    <string name="write_permission_needed">您需要允许 CitraVR 对外部存储器进行读写访问，以便模拟器正常工作。</string>
+    <string name="write_permission_needed">您需要允许 AzaharXR 对外部存储器进行读写访问，以便模拟器正常工作。</string>
     <string name="load_settings">正在加载设置...</string>
-    <string name="external_storage_not_mounted">需要有可用的外部存储器，CitraVR 才能正常工作。</string>
+    <string name="external_storage_not_mounted">需要有可用的外部存储器，AzaharXR 才能正常工作。</string>
     <string name="select_dir">选择此目录</string>
     <string name="empty_gamelist">找不到游戏文件或尚未添加游戏目录。</string>
     <string name="do_not_show_this_again">不要再显示</string>
@@ -303,9 +303,9 @@
     <string name="standard_mii">标准 Mii</string>
     <string name="camera_select_image">选择图像</string>
     <string name="camera">摄像头</string>
-    <string name="camera_permission_needed">CitraVR 需要访问您的摄像头来模拟 3DS 上的摄像头。\n\n或者，您也可以在设置—&gt;摄像头中将“图像来源”设置为“静止图像”。</string>
+    <string name="camera_permission_needed">AzaharXR 需要访问您的摄像头来模拟 3DS 上的摄像头。\n\n或者，您也可以在设置—&gt;摄像头中将“图像来源”设置为“静止图像”。</string>
     <string name="microphone">麦克风</string>
-    <string name="microphone_permission_needed">CitraVR 需要访问您的麦克风来模拟 3DS 实机上的麦克风。\n\n或者，您也可以在声音设置中更改“音频输入设备”。</string>
+    <string name="microphone_permission_needed">AzaharXR 需要访问您的麦克风来模拟 3DS 实机上的麦克风。\n\n或者，您也可以在声音设置中更改“音频输入设备”。</string>
     <string name="abort_button">中止</string>
     <string name="continue_button">继续</string>
     <string name="system_archive_not_found">未找到系统档案</string>
@@ -331,7 +331,7 @@
     <plurals name="cia_install_toast">
         <item quantity="other">正在安装 %d 个文件。请查看通知了解详情。</item>
     </plurals>
-    <string name="cia_install_notification_channel_description">CIA 文件安装时的 CitraVR 通知</string>
+    <string name="cia_install_notification_channel_description">CIA 文件安装时的 AzaharXR 通知</string>
     <string name="cia_install_notification_title">正在安装 CIA 文件</string>
     <string name="cia_install_notification_installing">正在安装 %s (%d/%d)</string>
     <string name="cia_install_notification_success_title">CIA 文件安装成功</string>
@@ -339,7 +339,7 @@
     <string name="cia_install_success">“%s”已安装成功</string>
     <string name="cia_install_error_aborted">“%s”的安装中断。\n 详情请参看日志文件</string>
     <string name="cia_install_error_invalid">“%s”不是有效的 CIA 文件</string>
-    <string name="cia_install_error_encrypted">“%s”需要解密才能被 CitraVR 识别。\n解密过程需要一台实体 3DS 游戏机</string>
+    <string name="cia_install_error_encrypted">“%s”需要解密才能被 AzaharXR 识别。\n解密过程需要一台实体 3DS 游戏机</string>
     <string name="cia_install_error_unknown">安装“%s”时出现未知错误。\n 有关详细信息，请参阅日志文件</string>
     <string name="change_theme_mode">更改主题模式</string>
     <string name="theme_mode_follow_system">跟随系统</string>
@@ -543,8 +543,8 @@
     <string name="december">十二月</string>
     <string name="preferences_vr">VR</string>
     <string name="vr_background">VR环境</string>
-    <string name="vr_error_two_instances_title">错误：检测到两个CitraVR实例</string>
-    <string name="vr_error_two_instances_message">检测到CitraVR的一个致命启动错误。这是一个已知问题。\n\n问题现已解决。请尝试重新启动游戏。</string>
+    <string name="vr_error_two_instances_title">错误：检测到两个AzaharXR实例</string>
+    <string name="vr_error_two_instances_message">检测到AzaharXR的一个致命启动错误。这是一个已知问题。\n\n问题现已解决。请尝试重新启动游戏。</string>
     <string name="vr_extra_performance_mode">VR额外性能模式</string>
     <string name="vr_cpu_level">CPU级别</string>
     <string name="vr_cpu_level_description">更高的级别可能会提高音频/仿真性能，但会更快耗尽电池</string>
@@ -554,14 +554,14 @@
     <string name="vr_graphics_warning_short">警告：这将在大多数内容中引起视觉错误</string>
     <string name="vr_new_3ds_description">对于大多数标题应启用。禁用时，可提高特定标题的性能（例如：星际火狐64 3D）</string>
     <string name="release_notes_title">发布说明</string>
-    <string name="vr_licenses_description">使Citra和CitraVR成为可能的项目</string>
+    <string name="vr_licenses_description">使Citra和AzaharXR成为可能的项目</string>
     <string name="game_compat_tooltip">游戏兼容性表</string>
     <string name="vr_extra_performance_mode_description">覆盖其他设置的值以最小化开销并最大化性能。注意：启用此设置时，将忽略用户对以下设置的值：VR环境（始终选择空白），音频拉伸（禁用）</string>
     <string name="vr_notice_title">注意:</string>
     <string name="vr_notice_description">在你第一次玩游戏或关卡时，你可能会遇到短暂的暂停或音频卡顿。
 
 在着色器加载完成后，它们会被存储到设备上，从而避免了后续启动时的卡顿。</string>
-    <string name="vr_notice_description2">有些游戏很难运行良好。请务必查阅 CitraVR 游戏兼容性列表，了解哪些游戏性能最佳。</string>
+    <string name="vr_notice_description2">有些游戏很难运行良好。请务必查阅 AzaharXR 游戏兼容性列表，了解哪些游戏性能最佳。</string>
     <string name="vr_input_binding_subtitle">遇到问题了吗？按下“选择”和“开始”键来禁用游戏手柄凝视模式，然后再试一次。</string>
     <string name="immersive_mode">沉浸模式</string>
     <string name="vr_si_mode_register_offset_title">寄存器偏移</string>

@@ -1,11 +1,11 @@
 <h1 align="center">
   <br>
-  <a href="https://azahar-emu.org/"><img src="assets/citravr_logo.png" alt="AzaharVR" width="500"></a> (Beta)
+  <a href="https://azahar-emu.org/"><img src="assets/citravr_logo.png" alt="AzaharXR" width="500"></a> (Beta)
 </h1>
 
 <h4 align="center"> Play 3DS homebrew and personal game backups in 3D on the go with your Quest.
 </br>
-  AzaharVR is a GPL-licensed, engineless OpenXR application with all source code publicly available.
+  AzaharXR is a GPL-licensed, engineless OpenXR application with all source code publicly available.
 </h4>
 
 <p align="center">
@@ -42,35 +42,35 @@ The project is still small, but I'm looking for ways to improve it as time goes 
 ## Compatibillty
 
 ### HMDs
-AzaharVR supports the following devices:
+AzaharXR supports the following devices:
 - Meta Quest 2
 - Meta Quest Pro
 - Meta Quest 3
 - Meta Quest 3S
 
 ### Games
-For a full list of games that work well on AzaharVR, please visit the [AzaharVR Game Compatability List](https://docs.google.com/spreadsheets/d/1viN8_MWO1HW9QXlkT-TdCGQbH1g660mKsIp1ZTARdho/edit?usp=sharing)
+For a full list of games that work well on AzaharXR, please visit the [AzaharXR Game Compatability List](https://docs.google.com/spreadsheets/d/1viN8_MWO1HW9QXlkT-TdCGQbH1g660mKsIp1ZTARdho/edit?usp=sharing)
 
 ### Controllers/Input 
 [Touch Controller Input Bindings Diagram](https://github.com/amwatson/CitraVR/wiki/Touch-Controller-Input-Bindings)
 
-For games that need access to more inputs, or if a player needs to access more inputs faster, AzaharVR also supports a multitude of 3rd party wired USB and wireless bluetooth controllers.
+For games that need access to more inputs, or if a player needs to access more inputs faster, AzaharXR also supports a multitude of 3rd party wired USB and wireless bluetooth controllers.
 
 ## Releases
 Grab the latest release [here](https://github.com/amwatson/CitraVR/releases)
 
 ## Known Issues
-See the [AzaharVR Known Issues](https://github.com/amwatson/CitraVR/wiki/CitraVR-Known-Issues)
+See the [AzaharXR Known Issues](https://github.com/amwatson/CitraVR/wiki/CitraVR-Known-Issues)
 
 ## How to Install and Run
-- [How to install and run AzaharVR on Quest](https://github.com/amwatson/CitraVR/wiki/Install-Run-on-Quest)
+- [How to install and run AzaharXR on Quest](https://github.com/amwatson/CitraVR/wiki/Install-Run-on-Quest)
 - [How to back up 3DS Games](https://github.com/amwatson/CitraVR/wiki/Backing-up-3DS-Games)
 
 ## Building
 [Building for Quest](https://github.com/amwatson/CitraVR/wiki/Building-for-Quest)
 
 ## Discord 
-Join the [Flat2VR](https://flat2vr.com/) discord and from there join [cvr-join](https://discord.com/channels/747967102895390741/1196505250102792232) to get access to the AzaharVR community and support forums
+Join the [Flat2VR](https://flat2vr.com/) discord and from there join [cvr-join](https://discord.com/channels/747967102895390741/1196505250102792232) to get access to the AzaharXR community and support forums
 
 # Need Help?
 Please check our [Troubleshooting](https://github.com/amwatson/CitraVR/wiki/Troubleshooting) and [Known Issues](https://github.com/amwatson/CitraVR/wiki/CitraVR-Known-Issues) pages to see if your issue is listed.
@@ -83,4 +83,4 @@ Otherwise, follow the instructions for <a href="#discord">Discord</a> and post i
 You can also support the upstream Azahar project at [azahar-emu.org](https://azahar-emu.org/).
 
 ## License
-AzaharVR is licensed under the GPLv3 (or any later version). Refer to the [LICENSE.txt](https://github.com/amwatson/CitraVR/blob/master/license.txt) file.
+AzaharXR is licensed under the GPLv3 (or any later version). Refer to the [LICENSE.txt](https://github.com/amwatson/CitraVR/blob/master/license.txt) file.

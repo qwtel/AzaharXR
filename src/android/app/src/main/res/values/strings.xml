@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">AzaharVR (Beta)</string>
-    <string name="app_disclaimer">This software will run games for the Nintendo 3DS handheld game console. No game titles are included.\n\nBefore you can begin with emulating, please select a folder to store AzaharVR\'s user data in.\n\nWhat\'s this:\n<a href="https://github.com/citra-emu/citra/wiki/CitraVR-Android-user-data-and-storage">Wiki - AzaharVR Android user data and storage</a>
+    <string name="app_name" translatable="false">AzaharXR (Beta)</string>
+    <string name="app_disclaimer">This software will run games for the Nintendo 3DS handheld game console. No game titles are included.\n\nBefore you can begin with emulating, please select a folder to store AzaharXR\'s user data in.\n\nWhat\'s this:\n<a href="https://github.com/citra-emu/citra/wiki/CitraVR-Android-user-data-and-storage">Wiki - AzaharXR Android user data and storage</a>
     </string>
-    <string name="app_notification_channel_name" translatable="false">AzaharVR</string>
-    <string name="app_notification_channel_id" translatable="false">AzaharVR</string>
-    <string name="app_notification_channel_description">AzaharVR 3DS emulator notifications</string>
-    <string name="app_notification_running">AzaharVR is Running</string>
-    <string name="app_game_install_description">Next, you will need to select a Game Folder. AzaharVR will display all of the 3DS ROMs inside of the selected folder in the app.\n\nCIA ROMs, updates and DLC will need to be installed separately by clicking on the folder icon and selecting Install CIA.</string>
+    <string name="app_notification_channel_name" translatable="false">AzaharXR</string>
+    <string name="app_notification_channel_id" translatable="false">AzaharXR</string>
+    <string name="app_notification_channel_description">AzaharXR 3DS emulator notifications</string>
+    <string name="app_notification_running">AzaharXR is Running</string>
+    <string name="app_game_install_description">Next, you will need to select a Game Folder. AzaharXR will display all of the 3DS ROMs inside of the selected folder in the app.\n\nCIA ROMs, updates and DLC will need to be installed separately by clicking on the folder icon and selecting Install CIA.</string>
     <string name="grid_menu_core_settings">Settings</string>
     <string name="home_options">Options</string>
     <string name="home_search">Search</string>
@@ -16,7 +16,7 @@
     <string name="install_game_content">Install CIA file</string>
     <string name="install_game_content_description">Install games, updates or DLC</string>
     <string name="share_log">Share Log</string>
-    <string name="share_log_description">Share AzaharVR\'s log file to debug issues</string>
+    <string name="share_log_description">Share AzaharXR\'s log file to debug issues</string>
     <string name="gpu_driver_manager">GPU Driver Manager</string>
     <string name="install_gpu_driver">Install GPU driver</string>
     <string name="install_gpu_driver_description">Install alternative drivers for potentially better performance or accuracy</string>
@@ -25,12 +25,12 @@
     <string name="custom_driver_not_supported_description">Custom driver loading isn\'t currently supported for this device.\nCheck this option again in the future to see if support was added!</string>
     <string name="share_log_not_found">No log file found</string>
     <string name="select_games_folder">Select Games Folder</string>
-    <string name="select_games_folder_description">Allows AzaharVR to populate the games list</string>
+    <string name="select_games_folder_description">Allows AzaharXR to populate the games list</string>
     <string name="about">About</string>
     <string name="citra_description">An open-source 3DS emulator</string>
     <string name="about_description">Build version, credits, and more</string>
     <string name="games_dir_selected">Games directory selected</string>
-    <string name="select_citra_user_folder_home_description">Changes the files that AzaharVR uses to load games</string>
+    <string name="select_citra_user_folder_home_description">Changes the files that AzaharXR uses to load games</string>
     <string name="theme_and_color_description">Modify the look of the app</string>
     <string name="install_cia_title">Install CIA</string>
     <string name="select_gpu_driver">Select GPU driver</string>
@@ -44,16 +44,16 @@
     <string name="installing_driver">Installing driver…</string>
     <string name="copied_to_clipboard">Copied to clipboard</string>
     <string name="contributors">Contributors</string>
-    <string name="contributors_description">Made with \u2764 from the AzaharVR team</string>
+    <string name="contributors_description">Made with \u2764 from the AzaharXR team</string>
     <string name="contributors_link">https://github.com/citra-emu/citra/graphs/contributors</string>
-    <string name="licenses_description">Projects that make AzaharVR for Android possible</string>
+    <string name="licenses_description">Projects that make AzaharXR for Android possible</string>
     <string name="build">Build</string>
     <string name="licenses">Licenses</string>
     <string name="support_link">https://flat2vr.com/</string>
     <string name="website_link">https://docs.google.com/spreadsheets/d/1viN8_MWO1HW9QXlkT-TdCGQbH1g660mKsIp1ZTARdho/</string>
     <string name="github_link">https://github.com/amwatson/CitraVR</string>
     <string name="welcome">Welcome!</string>
-    <string name="welcome_description">Learn how to setup &lt;b&gt;AzaharVR&lt;/b&gt; and jump into emulation.</string>
+    <string name="welcome_description">Learn how to setup &lt;b&gt;AzaharXR&lt;/b&gt; and jump into emulation.</string>
     <string name="get_started">Get started</string>
     <string name="step_complete">Complete!</string>
     <string name="games">Games</string>
@@ -65,7 +65,7 @@
     <string name="notifications_description">Grant the notification permission with the button below.</string>
     <string name="give_permission">Grant permission</string>
     <string name="notification_warning">Skip granting the notification permission?</string>
-    <string name="notification_warning_description">AzaharVR won\'t be able to notify you of important information.</string>
+    <string name="notification_warning_description">AzaharXR won\'t be able to notify you of important information.</string>
     <string name="filesystem_permission_warning">Missing Permissions</string>
     <string name="filesystem_permission_warning_description">Azahar requires permission to manage files on this device in order to store and manage its data.\n\nPlease grant the \"Filesystem\" permission before continuing.</string>
     <string name="camera_permission">Camera</string>
@@ -92,7 +92,7 @@
     <string name="use_prior_lime3ds_directory">Use Prior Lime3DS Directory</string>
     <string name="select">Select</string>
     <string name="cannot_skip">You can\'t skip this step</string>
-    <string name="cannot_skip_directory_description">This step is required to allow AzaharVR to work. Please select a directory and then you can continue.</string>
+    <string name="cannot_skip_directory_description">This step is required to allow AzaharXR to work. Please select a directory and then you can continue.</string>
     <string name="selecting_user_directory_without_write_permissions">You have lost write permissions on your <a href="https://web.archive.org/web/20240304193549/https://github.com/citra-emu/citra/wiki/Citra-Android-user-data-and-storage">user data</a> directory, where saves and other information are stored. This can happen after some app or Android updates. Please re-select the directory to regain permissions so you can continue.</string>
     <string name="invalid_selection">Invalid Selection</string>
     <string name="invalid_user_directory">The user directory selection was invalid.\nPlease re-select the user directory, ensuring that you navigate to it from the root of your device\'s storage.</string>
@@ -535,7 +535,7 @@
     <string name="unlock_drawer">Unlock Drawer</string>
     <string name="write_permission_needed">You need to allow write access to external storage for the emulator to work</string>
     <string name="load_settings">Loading Settings…</string>
-    <string name="external_storage_not_mounted">The external storage needs to be available in order to use AzaharVR</string>
+    <string name="external_storage_not_mounted">The external storage needs to be available in order to use AzaharXR</string>
     <string name="select_dir">Select This Directory</string>
     <string name="empty_gamelist">No files were found or no game directory has been selected yet.</string>
     <string name="do_not_show_this_again">Do not show this again</string>
@@ -557,9 +557,9 @@
     <string name="standard_mii">Standard Mii</string>
     <string name="camera_select_image">Select Image</string>
     <string name="camera">Camera</string>
-    <string name="camera_permission_needed">AzaharVR needs to access your camera to emulate the 3DS\'s cameras.\n\nAlternatively, you can also set \"Image Source\" to \"Still Image\" in Camera Settings.</string>
+    <string name="camera_permission_needed">AzaharXR needs to access your camera to emulate the 3DS\'s cameras.\n\nAlternatively, you can also set \"Image Source\" to \"Still Image\" in Camera Settings.</string>
     <string name="microphone">Microphone</string>
-    <string name="microphone_permission_needed">AzaharVR needs to access your microphone to emulate the 3DS\'s microphone.\n\nAlternatively, you can also change \"Audio Input Device\" in Audio Settings.</string>
+    <string name="microphone_permission_needed">AzaharXR needs to access your microphone to emulate the 3DS\'s microphone.\n\nAlternatively, you can also change \"Audio Input Device\" in Audio Settings.</string>
     <string name="abort_button">Abort</string>
     <string name="continue_button">Continue</string>
     <string name="system_archive_not_found">System Archive Not Found</string>
@@ -642,9 +642,9 @@
         <item quantity="one">Installing %d file. See notification for more details.</item>
         <item quantity="other">Installing %d files. See notification for more details.</item>
     </plurals>
-    <string name="cia_install_notification_channel_name" translatable="false">AzaharVR CIA Install</string>
+    <string name="cia_install_notification_channel_name" translatable="false">AzaharXR CIA Install</string>
     <string name="cia_install_notification_channel_id" translatable="false">citra-cia</string>
-    <string name="cia_install_notification_channel_description">AzaharVR notifications during CIA Install</string>
+    <string name="cia_install_notification_channel_description">AzaharXR notifications during CIA Install</string>
     <string name="cia_install_notification_title">Installing CIA</string>
     <string name="cia_install_notification_installing">Installing %s (%d/%d)</string>
     <string name="cia_install_notification_success_title">Successfully installed CIA</string>
@@ -652,7 +652,7 @@
     <string name="cia_install_success">\"%s\" has been installed successfully</string>
     <string name="cia_install_error_aborted">The installation of \"%s\" was aborted.\n Please see the log for more details</string>
     <string name="cia_install_error_invalid">\"%s\" is not a valid CIA</string>
-    <string name="cia_install_error_encrypted">\"%s\" must be decrypted before being used with AzaharVR.\n A real 3DS is required</string>
+    <string name="cia_install_error_encrypted">\"%s\" must be decrypted before being used with AzaharXR.\n A real 3DS is required</string>
     <string name="cia_install_error_unknown">An unknown error occurred while installing \"%s\".\n Please see the log for more details</string>
     <string name="memory_formatted">%1$s %2$s</string>
     <string name="memory_byte">Byte</string>
@@ -898,8 +898,8 @@
     <string name="vr_background">VR Environment</string>
     <string name="vr_keyboard_left">&lt;</string>
     <string name="vr_keyboard_right">&gt;</string>
-    <string name="vr_error_two_instances_title">Error: Detected Two AzaharVR Instances</string>
-    <string name="vr_error_two_instances_message">Detected a fatal launch bug with AzaharVR.  This is a known issue. \n\nThe problem is now resolved.   Please try launching the game again. </string>
+    <string name="vr_error_two_instances_title">Error: Detected Two AzaharXR Instances</string>
+    <string name="vr_error_two_instances_message">Detected a fatal launch bug with AzaharXR.  This is a known issue. \n\nThe problem is now resolved.   Please try launching the game again. </string>
     <string name="vr_extra_performance_mode">VR Extra Performance Mode</string>
     <string name="vr_cpu_level">CPU level</string>
     <string name="vr_cpu_level_description">Higher levels may improve audio/emulation performance, but will drain the battery faster</string>
@@ -921,16 +921,16 @@
     <string name="vr_new_3ds_description">Should be enabled for most titles.  When disabled, improves performance of specific titles (e. g.  Star Fox 64 3D)</string>
     <string name="release_notes_link">https://github.com/amwatson/CitraVR/releases/tag/%1$s</string>
     <string name="release_notes_title">Release Notes</string>
-    <string name="vr_licenses_description">Projects that make Azahar and AzaharVR possible</string>
+    <string name="vr_licenses_description">Projects that make Azahar and AzaharXR possible</string>
     <string name="game_compat_tooltip">Game Compatibility Sheet</string>
     <string name="vr_extra_performance_mode_description">Overrides the value of other settings to minimize overhead and maxmimize performance.  NOTE: when this setting is enabled, the user\'s values for the following settings are ignored: VR Environment (always selects Void), Audio stretching (disabled)</string>
     <string name="vr_display_refresh_rate">Display Refresh Rate</string>
     <string name="vr_display_refresh_rate_description">120 Hz mode might help with frame pacing when playing 60 Hz games.</string>
     <string name="vr_display_refresh_rate_default">System default</string>
     <string name="vr_display_refresh_rate_120">120 Hz</string>
-    <string name="vr_notice_title">Welcome to AzaharVR!</string>
+    <string name="vr_notice_title">Welcome to AzaharXR!</string>
     <string name="vr_notice_description">During your first playthrough of a game or level, you might experience brief pauses or audio stutters. \n\nAfter the shaders are loaded, they are stored to the device, preventing these stutters on subsequent launches. </string>
-    <string name="vr_notice_description2">Some games just won\'t run well. Be sure to check the AzaharVR Game Compatibility List to see which games perform best.</string>
+    <string name="vr_notice_description2">Some games just won\'t run well. Be sure to check the AzaharXR Game Compatibility List to see which games perform best.</string>
     <string name="vr_input_binding_subtitle">\nHaving trouble? Press Select + Start to disable Gamepad Gaze Mode, then try again</string>
     <string name="immersive_mode">Immersive Mode</string>
     <string name="vr_si_mode_register_offset_title">Register Offset [Optional]</string>

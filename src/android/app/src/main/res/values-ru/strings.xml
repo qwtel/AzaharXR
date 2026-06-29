@@ -483,39 +483,39 @@
     <string name="october">Октябрь</string>
     <string name="november">Ноябрь</string>
     <string name="december">Декабрь</string>
-    <string name="app_disclaimer">Данное программное обеспечение предназначено для запуска игр от портативной консоли Nintendo 3DS. Приложение не содержит предустановленных игр.\n\nПожалуйста, перед запуском эмуляции укажите папку хранения пользовательских данных CitraVR.\n\nПодробнее:\n<a href="https://github.com/citra-emu/citra/wiki/CitraVR-Android-user-data-and-storage">Wiki - CitraVR Android user data and storage</a>
+    <string name="app_disclaimer">Данное программное обеспечение предназначено для запуска игр от портативной консоли Nintendo 3DS. Приложение не содержит предустановленных игр.\n\nПожалуйста, перед запуском эмуляции укажите папку хранения пользовательских данных AzaharXR.\n\nПодробнее:\n<a href="https://github.com/citra-emu/citra/wiki/CitraVR-Android-user-data-and-storage">Wiki - AzaharXR Android user data and storage</a>
     </string>
-    <string name="app_notification_channel_description">Уведомления эмулятора 3DS CitraVR</string>
-    <string name="app_notification_running">CitraVR выполняется</string>
+    <string name="app_notification_channel_description">Уведомления эмулятора 3DS AzaharXR</string>
+    <string name="app_notification_running">AzaharXR выполняется</string>
     <string name="app_game_install_description">Далее укажите папку с играм. Образы игр 3DS из выбранной папки отобразятся в приложении.\n\nДля установки образов CIA, обновлений и DLC нажмите на значок папки и выберите \'Установить CIA\'.</string>
     <string name="home_games">Игры</string>
     <string name="install_game_content_description">Установка игр, обновлений или DLC</string>
-    <string name="share_log_description">Отправить лог-файл CitraVR для отладки ошибок</string>
+    <string name="share_log_description">Отправить лог-файл AzaharXR для отладки ошибок</string>
     <string name="select_games_folder">Выбор папки с играми</string>
-    <string name="select_games_folder_description">Позволяет CitraVR формировать список игр</string>
+    <string name="select_games_folder_description">Позволяет AzaharXR формировать список игр</string>
     <string name="citra_description">Эмулятор 3DS с открытым исходным кодом</string>
     <string name="games_dir_selected">Папка с играми выбрана</string>
-    <string name="select_citra_user_folder_home_description">Изменение файлов, используемых CitraVR для запуска игр</string>
+    <string name="select_citra_user_folder_home_description">Изменение файлов, используемых AzaharXR для запуска игр</string>
     <string name="contributors">Участники</string>
-    <string name="contributors_description">Создано с \u2764 от команды CitraVR</string>
+    <string name="contributors_description">Создано с \u2764 от команды AzaharXR</string>
     <string name="contributors_link">https://github.com/citra-emu/citra/graphs/contributors</string>
-    <string name="licenses_description">Проекты, которые сделали возможным CitraVR для Android</string>
+    <string name="licenses_description">Проекты, которые сделали возможным AzaharXR для Android</string>
     <string name="support_link">https://discord.gg/FAXfZV9</string>
     <string name="website_link">https://citra-emu.org/</string>
     <string name="github_link">https://github.com/citra-emu</string>
-    <string name="welcome_description">Ознакомьтесь с настройкой &lt;b&gt;CitraVR&lt;/b&gt; и приступайте к эмуляции.</string>
+    <string name="welcome_description">Ознакомьтесь с настройкой &lt;b&gt;AzaharXR&lt;/b&gt; и приступайте к эмуляции.</string>
     <string name="games">Игры</string>
     <string name="games_description">Выберите папку с играми с помощью кнопки внизу.</string>
     <string name="done_description">Всё настроено.\nПриятной игры!</string>
     <string name="add_games">Добавить игры</string>
-    <string name="notification_warning_description">CitraVR не сможет отображать уведомления с важной информацией.</string>
+    <string name="notification_warning_description">AzaharXR не сможет отображать уведомления с важной информацией.</string>
     <string name="add_games_warning">Пропустить выбор папки с играми?</string>
     <string name="add_games_warning_description">Если не выбрать папку, игры не будут отображены в списке.</string>
     <string name="add_games_warning_help">https://citra-emu.org/wiki/dumping-game-cartridges/</string>
     <string name="select_citra_user_folder">Выбор папки пользователя</string>
     <string name="select_citra_user_folder_description">С помощью кнопки внизу выберите &lt;a href=\"https://github.com/citra-emu/citra/wiki/CitraVR-Android-user-data-and-storage\"&gt;папку пользователя&lt;/a&gt;.</string>
     <string name="cannot_skip">Вы не можете пропустить данное действие</string>
-    <string name="cannot_skip_directory_description">Данный шаг требуется для работы CitraVR. Пожалуйста, укажите папку, чтобы продолжить.</string>
+    <string name="cannot_skip_directory_description">Данный шаг требуется для работы AzaharXR. Пожалуйста, укажите папку, чтобы продолжить.</string>
     <string name="cannot_skip_directory_help">https://github.com/citra-emu/citra/wiki/CitraVR-Android-user-data-and-storage</string>
     <string name="search_and_filter_games">Поиск и сортировка игр</string>
     <string name="home_search_games">Найти игры</string>
@@ -538,19 +538,19 @@
     <string name="emulation_screen_layout_landscape">По умолчанию</string>
     <string name="emulation_cycle_landscape_layouts">Сменить ландшафтный макет</string>
     <string name="emulation_show_overlay">Показывать оверлей</string>
-    <string name="external_storage_not_mounted">Внешнее хранилище должно быть доступно, чтобы использовать CitraVR</string>
-    <string name="camera_permission_needed">Для эмуляции камер 3DS требуется предоставить CitraVR доступ к камере устройства.\n\nВы также можете установить значение \\"Статичная картинка\\" для опции \\"Источник изображения\"\ в настройках камеры.</string>
-    <string name="microphone_permission_needed">Для эмуляции микрофона 3DS требуется предоставить CitraVR доступ к микрофону устройства.\n\nВы также можете изменить \\"Устройство ввода звука\\" в настройках аудио.</string>
+    <string name="external_storage_not_mounted">Внешнее хранилище должно быть доступно, чтобы использовать AzaharXR</string>
+    <string name="camera_permission_needed">Для эмуляции камер 3DS требуется предоставить AzaharXR доступ к камере устройства.\n\nВы также можете установить значение \\"Статичная картинка\\" для опции \\"Источник изображения\"\ в настройках камеры.</string>
+    <string name="microphone_permission_needed">Для эмуляции микрофона 3DS требуется предоставить AzaharXR доступ к микрофону устройства.\n\nВы также можете изменить \\"Устройство ввода звука\\" в настройках аудио.</string>
     <string name="building_shaders">Построение шейдеров</string>
-    <string name="cia_install_notification_channel_description">Уведомления CitraVR при установке CIA</string>
+    <string name="cia_install_notification_channel_description">Уведомления AzaharXR при установке CIA</string>
     <string name="cia_install_notification_installing">Установка %s (%d/%d)</string>
-    <string name="cia_install_error_encrypted">\"%s\" необходимо расшифровать перед использованием в CitraVR.\n Требуется настоящая 3DS</string>
+    <string name="cia_install_error_encrypted">\"%s\" необходимо расшифровать перед использованием в AzaharXR.\n Требуется настоящая 3DS</string>
     <string name="change_theme_mode">Тема приложения</string>
     <string name="material_you_description">Использовать системные цвета в приложении</string>
     <string name="preferences_vr">VR</string>
     <string name="vr_background">VR Окружение</string>
-    <string name="vr_error_two_instances_title">Ошибка: Обнаружено Два Экземпляра CitraVR</string>
-    <string name="vr_error_two_instances_message">Обнаружена критическая ошибка запуска с CitraVR. Это известная проблема. \n\nПроблема теперь решена. Пожалуйста, попробуйте запустить игру снова.</string>
+    <string name="vr_error_two_instances_title">Ошибка: Обнаружено Два Экземпляра AzaharXR</string>
+    <string name="vr_error_two_instances_message">Обнаружена критическая ошибка запуска с AzaharXR. Это известная проблема. \n\nПроблема теперь решена. Пожалуйста, попробуйте запустить игру снова.</string>
     <string name="vr_extra_performance_mode">Режим Повышенной Производительности VR</string>
     <string name="vr_cpu_level">Уровень CPU</string>
     <string name="vr_cpu_level_description">Более высокие уровни могут улучшить производительность аудио/эмуляции, но будут быстрее разряжать батарею</string>
@@ -560,14 +560,14 @@
     <string name="vr_graphics_warning_short">ВНИМАНИЕ: это ПРИВЕДЕТ к визуальным артефактам в большинстве контента</string>
     <string name="vr_new_3ds_description">Должно быть включено для большинства титулов. При отключении улучшает производительность конкретных титулов (например, Star Fox 64 3D)</string>
     <string name="release_notes_title">Примечания к Релизу</string>
-    <string name="vr_licenses_description">Проекты, благодаря которым возможны Citra и CitraVR</string>
+    <string name="vr_licenses_description">Проекты, благодаря которым возможны Citra и AzaharXR</string>
     <string name="game_compat_tooltip">Таблица Совместимости Игр</string>
     <string name="vr_extra_performance_mode_description">Переопределяет значение других настроек для минимизации накладных расходов и максимизации производительности. ВНИМАНИЕ: когда эта настройка включена, значения пользователя для следующих настроек игнорируются: VR Окружение (всегда выбирается Пустота), Растяжение аудио (отключено)</string>
     <string name="vr_notice_title">Внимание:</string>
     <string name="vr_notice_description">Во время первого прохождения игры или уровня вы можете столкнуться с краткими остановками или прерываниями звука.
 
 После загрузки шейдеров они хранятся на устройстве, предотвращая эти прерывания при последующих запусках.</string>
-    <string name="vr_notice_description2">Некоторые игры просто не будут работать хорошо. Убедитесь, что проверяете список совместимости игр CitraVR, чтобы узнать, какие игры показывают лучшие результаты.</string>
+    <string name="vr_notice_description2">Некоторые игры просто не будут работать хорошо. Убедитесь, что проверяете список совместимости игр AzaharXR, чтобы узнать, какие игры показывают лучшие результаты.</string>
     <string name="vr_input_binding_subtitle">Имеете проблемы? Нажмите кнопки "Select + Start", чтобы отключить режим геймпада "Gaze", а затем попробуйте снова.</string>
     <string name="immersive_mode">Режим полного погружения</string>
     <string name="vr_si_mode_register_offset_title">Сдвиг регистра.</string>

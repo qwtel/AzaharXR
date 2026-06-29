@@ -2,14 +2,14 @@
     <!-- Pressed state -->
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
-            <solid android:color="@color/citra_primaryContainer"/> <!-- Pressed color -->
+            <solid android:color="@color/vr_loading_track"/> <!-- Pressed color -->
             <corners android:radius="4dp"/>
         </shape>
     </item>
     <!-- Default state -->
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/citra_primary"/> <!-- Default color -->
+            <solid android:color="@color/vr_azahar_center_dark"/> <!-- Default color -->
             <corners android:radius="4dp"/>
         </shape>
     </item>

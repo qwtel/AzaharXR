@@ -215,10 +215,11 @@
     <color name="citra_onErrorContainer">#FFDAD6</color>
     <color name="citra_shadow">#000000</color>
     <color name="citra_scrim">#000000</color>
-    <color name="citra_primary">#5bd790</color>
-    <color name="citra_onPrimary">@android:color/white</color>
-    <color name="citra_primaryContainer">#B2E5C5</color>
-    <color name="citra_onPrimaryContainer">@android:color/white</color>
+    <color name="azahar_accent">#D6DA21</color>
+    <color name="citra_primary">#D6DA21</color>
+    <color name="citra_onPrimary">#1B1B12</color>
+    <color name="citra_primaryContainer">#4C5100</color>
+    <color name="citra_onPrimaryContainer">#FFFFF5</color>
     <color name="citra_secondary">#C2C5DD</color>
     <color name="citra_onSecondary">#2B3042</color>
     <color name="citra_secondaryContainer">#424659</color>
@@ -237,5 +238,5 @@
     <color name="citra_inverseOnSurface">#1B1B1F</color>
     <color name="citra_inverseSurface">#E4E1E6</color>
     <color name="citra_inversePrimary">#6639a6</color>
-    <color name="citra_surfaceTint">#5bd790</color>
+    <color name="citra_surfaceTint">#D6DA21</color>
 </resources>

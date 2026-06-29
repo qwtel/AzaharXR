@@ -540,7 +540,7 @@ vr_environment =
 # false (default): Off, true: On
 vr_extra_performance_mode =
 
-# OpenXR CPU performance level. Defaults to 3 in AzaharVR.
+# OpenXR CPU performance level. Defaults to 3 in AzaharXR.
 vr_cpu_level =
 
 # Requested headset display refresh rate in Hz.
@@ -556,7 +556,7 @@ vr_dpad_thumbrest_mode =
 # 5 (default): Combined
 vr_motion_source =
 
-# 0: Off, higher values enable AzaharVR immersive rendering modes.
+# 0: Off, higher values enable AzaharXR immersive rendering modes.
 vr_immersive_mode =
 vr_si_mode_register_offset =
 vr_immersive_positional_game_scaler =
