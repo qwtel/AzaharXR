@@ -307,7 +307,7 @@ class EmulationFragment :
 
             titleView.text = game.title
 
-            iconView.setImageResource(R.drawable.azahar_flower_logo)
+            GameIconUtils.loadGameIcon(requireActivity(), game, iconView)
         }
 
         binding.inGameMenu.setNavigationItemSelectedListener {
@@ -455,7 +455,7 @@ class EmulationFragment :
             }
         )
 
-        binding.loadingImage.setImageResource(R.drawable.azahar_flower_logo)
+        GameIconUtils.loadGameIcon(requireActivity(), game, binding.loadingImage)
         binding.loadingTitle.text = game.title
 
         viewLifecycleOwner.lifecycleScope.apply {

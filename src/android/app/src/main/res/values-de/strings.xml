@@ -777,7 +777,7 @@
     <string name="vr_graphics_warning_short">WARNUNG: Dies wird bei den meisten Inhalten visuelle Artefakte verursachen</string>
     <string name="vr_new_3ds_description">Sollte für die meisten Titel aktiviert sein. Bei Deaktivierung wird die Leistung bestimmter Titel verbessert (z. B. Star Fox 64 3D)</string>
     <string name="release_notes_title">Versionshinweise</string>
-    <string name="vr_licenses_description">Projekte, die Citra und AzaharXR ermöglichen</string>
+    <string name="vr_licenses_description">Projekte, die Azahar und AzaharXR ermöglichen</string>
     <string name="game_compat_tooltip">Kompatibilitätsliste für Spiele</string>
     <string name="vr_extra_performance_mode_description">Überschreibt die Werte anderer Einstellungen, um Overhead zu minimieren und die Leistung zu maximieren. HINWEIS: Wenn diese Einstellung aktiviert ist, werden die Werte des Benutzers für die folgenden Einstellungen ignoriert: VR-Umgebung (wählt immer Leer), Audio-Stretching (deaktiviert)</string>
     <string name="vr_notice_title">Hinweis:</string>

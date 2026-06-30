@@ -560,7 +560,7 @@
     <string name="vr_graphics_warning_short">ВНИМАНИЕ: это ПРИВЕДЕТ к визуальным артефактам в большинстве контента</string>
     <string name="vr_new_3ds_description">Должно быть включено для большинства титулов. При отключении улучшает производительность конкретных титулов (например, Star Fox 64 3D)</string>
     <string name="release_notes_title">Примечания к Релизу</string>
-    <string name="vr_licenses_description">Проекты, благодаря которым возможны Citra и AzaharXR</string>
+    <string name="vr_licenses_description">Проекты, благодаря которым возможны Azahar и AzaharXR</string>
     <string name="game_compat_tooltip">Таблица Совместимости Игр</string>
     <string name="vr_extra_performance_mode_description">Переопределяет значение других настроек для минимизации накладных расходов и максимизации производительности. ВНИМАНИЕ: когда эта настройка включена, значения пользователя для следующих настроек игнорируются: VR Окружение (всегда выбирается Пустота), Растяжение аудио (отключено)</string>
     <string name="vr_notice_title">Внимание:</string>
