@@ -10,7 +10,7 @@
         android:layout_width="104dp"
         android:layout_height="104dp"
         android:layout_marginTop="20dp"
-        android:src="@drawable/azahar_flower_logo"
+        android:src="@drawable/ic_citra_full"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -24,20 +24,21 @@
         android:fontFamily="@font/lato_bold"
         android:gravity="center"
         android:text="Azahar"
-        android:textColor="@color/vr_azahar_ink"
         android:textSize="54sp"
         android:translationY="4dp"
         app:layout_constraintBottom_toBottomOf="@+id/image_logo"
         app:layout_constraintStart_toEndOf="@+id/image_logo" />
 
-    <TextView
+    <org.citra.citra_emu.ui.GradientTextView
         android:id="@+id/xrTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:fontFamily="@font/dancing_script_bold"
+        android:paddingStart="2dp"
+        android:paddingEnd="2dp"
         android:text="XR"
-        android:textColor="@color/vr_azahar_center_dark"
+        android:textColor="@color/vr_azahar_wordmark_gradient_mid"
         android:textSize="64sp"
         android:translationX="-6dp"
         android:translationY="-12dp"

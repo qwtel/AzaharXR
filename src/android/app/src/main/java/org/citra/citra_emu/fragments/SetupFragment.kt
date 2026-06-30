@@ -109,7 +109,7 @@ class SetupFragment : Fragment() {
         pages.apply {
             add(
                 SetupPage(
-                    R.drawable.azahar_flower_logo,
+                    R.drawable.ic_citra,
                     R.string.welcome,
                     R.string.welcome_description,
                     0,

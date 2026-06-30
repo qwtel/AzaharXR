@@ -5,6 +5,10 @@
     <color name="vr_azahar_center_dark">#9A9F14</color>
     <color name="vr_azahar_glow">#D1FFC0</color>
     <color name="vr_azahar_ink">#050505</color>
+    <color name="vr_azahar_wordmark_gradient_start">#DAFFB2</color>
+    <color name="vr_azahar_wordmark_gradient_mid">#FFFDB3</color>
+    <color name="vr_azahar_wordmark_gradient_end">#FFFFEB</color>
+    <color name="vr_azahar_wordmark_outline">#4C5100</color>
 
     <color name="vr_panel_background">#1B1B12</color>
     <color name="vr_panel_preview_background">#11110C</color>
