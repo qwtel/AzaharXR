@@ -27,6 +27,7 @@ import kotlin.system.exitProcess
 class VrActivity : EmulationActivity() {
     private var mHandle: Long = 0
     private var clickRunnable = ClickRunnable()
+    private var isReturningToMenu = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.info("VR [Java] onCreate()");
@@ -120,6 +121,12 @@ class VrActivity : EmulationActivity() {
     }
 
     fun quitToMenu() {
+        if (isReturningToMenu) {
+            Log.info("VR [Java] quitToMenu already in progress")
+            return
+        }
+
+        isReturningToMenu = true
         finish()
         val relaunchMainIntent = Intent(this, MainActivity::class.java)
         startActivity(relaunchMainIntent)
