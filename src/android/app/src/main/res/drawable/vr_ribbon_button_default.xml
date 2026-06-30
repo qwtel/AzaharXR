@@ -1,19 +1,5 @@
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <shape android:shape="rectangle">
-            <solid android:color="@color/vr_panel_button_outer" />
-            <corners android:radius="8dp" />
-        </shape>
-    </item>
-
-    <!-- Inner button layer -->
-    <item android:left="2dp" android:right="2dp" android:top="2dp" android:bottom="2dp">
-        <shape android:shape="rectangle">
-            <gradient
-                android:angle="270"
-                android:endColor="@color/vr_panel_button_end"
-                android:startColor="@color/vr_panel_button_start" />
-            <corners android:radius="6dp" />
-        </shape>
-    </item>
-</layer-list>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/citra_surfaceVariant" />
+    <corners android:radius="8dp" />
+</shape>

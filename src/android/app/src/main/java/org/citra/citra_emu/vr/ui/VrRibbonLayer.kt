@@ -1,17 +1,24 @@
 package org.citra.citra_emu.vr.ui
 
+import android.content.res.ColorStateList
+import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.StateListDrawable
 import android.os.Handler
-import android.widget.RadioButton
-import android.widget.RadioGroup
 import android.view.KeyEvent
+import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ProgressBar
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.ToggleButton
+import com.google.android.material.color.MaterialColors
 import org.citra.citra_emu.BuildConfig
 import org.citra.citra_emu.NativeLibrary
 import org.citra.citra_emu.R
+import org.citra.citra_emu.utils.EmulationLifecycleUtil
 import org.citra.citra_emu.vr.VrActivity
 import org.citra.citra_emu.vr.utils.VrMessageQueue
 import org.citra.citra_emu.utils.Log
@@ -28,6 +35,7 @@ class VrRibbonLayer(activity: VrActivity) : VrUILayer(activity, R.layout.vr_ribb
 
     override fun onSurfaceCreated() {
       super.onSurfaceCreated()
+      applyRibbonButtonTheme()
       initializeLeftMenu()
       initializeMainPanel()
       initializePositionalPanel()
@@ -68,23 +76,87 @@ class VrRibbonLayer(activity: VrActivity) : VrUILayer(activity, R.layout.vr_ribb
         for (i in 0 until group.childCount) {
           val btn = group.getChildAt(i) as RadioButton
             if (btn.id == checkedId) {
-              // This button is checked, change the background accordingly
-              btn.background = activity?.getDrawable(
-                  R.drawable.vr_ribbon_button_pressed)
                 when (btn.id) {
                   R.id.button_menu_main -> switchMenus(MenuType.MAIN)
                     R.id.button_menu_positional -> switchMenus(MenuType.POSITION)
                   R.id.button_menu_stats -> switchMenus(MenuType.STATS)
                 }
-            } else {
-              // This button is not checked, revert to the default background
-              btn.background = activity?.getDrawable(R.drawable.vr_ribbon_button_default)
             }
         }
       }
     // Set the first button as checked
     radioGroup?.check(R.id.button_menu_main)
   }
+
+  private fun applyRibbonButtonTheme() {
+    val colors = RibbonButtonColors(
+      defaultFill = getThemeColor(com.google.android.material.R.attr.colorSurfaceVariant),
+      defaultText = getThemeColor(com.google.android.material.R.attr.colorOnSurfaceVariant),
+      selectedFill = getThemeColor(com.google.android.material.R.attr.colorPrimaryContainer),
+      selectedText = getThemeColor(com.google.android.material.R.attr.colorOnPrimaryContainer)
+    )
+    applyRibbonButtonTheme(window?.decorView, colors)
+  }
+
+  private fun applyRibbonButtonTheme(view: View?, colors: RibbonButtonColors) {
+    if (view is Button || view is RadioButton || view is ToggleButton) {
+      (view as TextView).apply {
+        background = createRibbonButtonSelector(colors)
+        setTextColor(
+          ColorStateList(
+            arrayOf(
+              intArrayOf(android.R.attr.state_checked),
+              intArrayOf(android.R.attr.state_pressed),
+              intArrayOf()
+            ),
+            intArrayOf(colors.selectedText, colors.selectedText, colors.defaultText)
+          )
+        )
+      }
+    }
+
+    if (view is ViewGroup) {
+      for (i in 0 until view.childCount) {
+        applyRibbonButtonTheme(view.getChildAt(i), colors)
+      }
+    }
+  }
+
+  private fun getThemeColor(attr: Int): Int =
+    MaterialColors.getColor(activity.window.decorView, attr)
+
+  private fun createRibbonButtonSelector(colors: RibbonButtonColors): StateListDrawable =
+    StateListDrawable().apply {
+      addState(
+        intArrayOf(android.R.attr.state_checked),
+        createRibbonButtonBackground(colors.selectedFill)
+      )
+      addState(
+        intArrayOf(android.R.attr.state_pressed),
+        createRibbonButtonBackground(colors.selectedFill)
+      )
+      addState(
+        intArrayOf(),
+        createRibbonButtonBackground(colors.defaultFill)
+      )
+    }
+
+  private fun createRibbonButtonBackground(fillColor: Int): GradientDrawable =
+    GradientDrawable().apply {
+      shape = GradientDrawable.RECTANGLE
+      setColor(fillColor)
+      cornerRadius = dp(8).toFloat()
+    }
+
+  private fun dp(value: Int): Int =
+    (value * activity.resources.displayMetrics.density + 0.5f).toInt()
+
+  private data class RibbonButtonColors(
+    val defaultFill: Int,
+    val defaultText: Int,
+    val selectedFill: Int,
+    val selectedText: Int
+  )
 
   private fun initializePositionalPanel() {
     val horizontalLockToggle = window?.findViewById<ToggleButton>(R.id.horizontalAxisToggle)
@@ -150,8 +222,10 @@ class VrRibbonLayer(activity: VrActivity) : VrUILayer(activity, R.layout.vr_ribb
         false
     }
     window?.findViewById<Button>(R.id.buttonExit)?.setOnTouchListener { _, motionEvent ->
-      activity.quitToMenu()
-        false
+      if (motionEvent.actionMasked == MotionEvent.ACTION_UP) {
+        EmulationLifecycleUtil.closeGame()
+      }
+      true
     }
   }
 

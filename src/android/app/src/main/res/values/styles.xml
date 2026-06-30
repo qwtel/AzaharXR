@@ -45,19 +45,19 @@
     </style>
 
     <style name="VrRibbonStatsLabel">
-        <item name="android:textColor">@color/citra_onPrimary</item>
+        <item name="android:textColor">@color/citra_onSurface</item>
         <item name="android:textSize">28sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="VrRibbonStatsSubLabel">
-        <item name="android:textColor">@color/citra_secondary</item>
+        <item name="android:textColor">@color/citra_onSurfaceVariant</item>
         <item name="android:textSize">24sp</item>
         <item name="android:textStyle">normal</item>
     </style>
 
     <style name="VrRibbonStatsValue">
-        <item name="android:textColor">@color/citra_secondary</item>
+        <item name="android:textColor">@color/citra_onSurfaceVariant</item>
         <item name="android:textSize">28sp</item>
         <item name="android:textStyle">normal</item>
     </style>

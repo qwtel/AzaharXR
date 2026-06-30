@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/position_panel"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:theme="@style/Theme.Material3.DayNight">
+    android:layout_height="wrap_content">
 
     <FrameLayout
         android:layout_width="1000dp"
@@ -41,7 +40,7 @@
                 android:padding="8dp"
                 android:text="@string/header_instructions_text"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textColor="@color/citra_onPrimary"
+                android:textColor="@color/citra_onSurface"
                 android:textSize="28sp" />
 
             <!-- Vertical Movement Section -->
@@ -52,7 +51,7 @@
                 android:padding="8dp"
                 android:text="@string/vertical_header_text"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textColor="@color/citra_onPrimary"
+                android:textColor="@color/citra_onSurface"
                 android:textSize="18sp" />
 
             <LinearLayout
@@ -70,7 +69,7 @@
                     android:padding="8dp"
                     android:gravity="center_vertical"
                     android:text="@string/vertical_instruction_1_text"
-                    android:textColor="@color/citra_onPrimary"
+                    android:textColor="@color/citra_onSurface"
                     android:textSize="18sp" />
 
                 <!-- Move vertically -->
@@ -82,7 +81,7 @@
                     android:padding="8dp"
                     android:gravity="center_vertical"
                     android:text="@string/vertical_instruction_2_text"
-                    android:textColor="@color/citra_onPrimary"
+                    android:textColor="@color/citra_onSurface"
                     android:textSize="18sp" />
             </LinearLayout>
 
@@ -94,7 +93,7 @@
                 android:padding="8dp"
                 android:text="@string/depth_header_text"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textColor="@color/citra_onPrimary"
+                android:textColor="@color/citra_onSurface"
                 android:textSize="18sp" />
 
             <!-- Top Panel Depth Adjustment -->
@@ -113,7 +112,7 @@
                     android:padding="8dp"
                     android:gravity="center_vertical"
                     android:text="@string/depth_top_panel_instruction_text"
-                    android:textColor="@color/citra_onPrimary"
+                    android:textColor="@color/citra_onSurface"
                     android:textSize="18sp" />
             </LinearLayout>
 
@@ -133,7 +132,7 @@
                     android:padding="8dp"
                     android:gravity="center_vertical"
                     android:text="@string/depth_lower_panel_instruction_text"
-                    android:textColor="@color/citra_onPrimary"
+                    android:textColor="@color/citra_onSurface"
                     android:textSize="18sp" />
             </LinearLayout>
 
@@ -145,7 +144,7 @@
                 android:padding="8dp"
                 android:text="@string/horizontal_header_text"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textColor="@color/citra_onPrimary"
+                android:textColor="@color/citra_onSurface"
                 android:textSize="18sp" />
 
             <LinearLayout
@@ -176,7 +175,7 @@
                         android:padding="8dp"
                         android:gravity="center_vertical"
                         android:text="@string/horizontal_instruction_toggle_text"
-                        android:textColor="@color/citra_onPrimary"
+                        android:textColor="@color/citra_onSurface"
                         android:textSize="18sp" />
                 </LinearLayout>
 
@@ -189,7 +188,7 @@
                     android:padding="8dp"
                     android:gravity="center_vertical"
                     android:text="@string/horizontal_instruction_slide_text"
-                    android:textColor="@color/citra_onPrimary"
+                    android:textColor="@color/citra_onSurface"
                     android:textSize="18sp" />
             </LinearLayout>
 
@@ -200,7 +199,7 @@
                 android:padding="8dp"
                 android:text="@string/reset_header_text"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textColor="@color/citra_onPrimary"
+                android:textColor="@color/citra_onSurface"
                 android:textSize="18sp" />
 
             <LinearLayout
@@ -223,7 +222,7 @@
                     android:padding="8dp"
                     android:gravity="center_vertical"
                     android:text="@string/reset_instruction_text"
-                    android:textColor="@color/citra_onPrimary"
+                    android:textColor="@color/citra_onSurface"
                     android:textSize="18sp" />
             </LinearLayout>
         </LinearLayout>
